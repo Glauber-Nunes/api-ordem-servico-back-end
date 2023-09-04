@@ -17,7 +17,7 @@ public class OsItemProdutoDto{
     private Long ordemServico_id;
 
     private Long produto_id;
-    private int quantidade;
+    private double quantidade;
     private double preco;
     private double subTotalProduto = 0;
 

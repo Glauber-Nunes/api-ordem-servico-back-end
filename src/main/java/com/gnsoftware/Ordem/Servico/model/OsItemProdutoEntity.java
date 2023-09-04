@@ -28,12 +28,12 @@ public class OsItemProdutoEntity {
     @JoinColumn(name = "produto_id")
     private ProdutoEntity produtoEntity;
 
-
-    private int quantidade;
+    private double quantidade;
     private double preco;
+
     private double subTotalProduto = 0;
 
-    public OsItemProdutoEntity(OsEntity ordemServico, ProdutoEntity produtoEntity, int quantidade, double preco) {
+    public OsItemProdutoEntity(OsEntity ordemServico, ProdutoEntity produtoEntity, double quantidade, double preco) {
         this.ordemServico = ordemServico;
         this.produtoEntity = produtoEntity;
         this.quantidade = quantidade;

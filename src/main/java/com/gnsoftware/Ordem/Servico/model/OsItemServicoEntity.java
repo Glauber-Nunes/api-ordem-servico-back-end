@@ -5,9 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,7 +25,7 @@ public class OsItemServicoEntity {
     @ManyToOne
     @JoinColumn(name = "servico_id")
     private ServicoEntity servicoEntity;
-  
+
     private int quantidade;
     private double preco;
     private double subTotalServico = 0;

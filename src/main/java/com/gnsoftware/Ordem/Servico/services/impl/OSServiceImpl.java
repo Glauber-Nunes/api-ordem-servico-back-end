@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -115,7 +114,6 @@ public class OSServiceImpl implements OSService {
 
     }
 
-
     //CONSULTAR SE O ID DO STATUS DA OrdemServicoEntity É IGUAL A ENCERRADO, CASO FOR NÃO DEIXA O USUARIO EDITAR A OrdemServicoEntity
     private void consultaStatusOs(OsDto osDto) {
 
@@ -154,8 +152,8 @@ public class OSServiceImpl implements OSService {
         for (OsItemProdutoDto itemProduto : osDto.getProdutos()) {
             Optional<ProdutoEntity> produto = produtoRepository.findById(itemProduto.getProduto_id());
             produto.orElseThrow(() -> new ModelNotFound("Produto Not Found"));
-
             osEntity.getItemProdutoOs().add(new OsItemProdutoEntity(osEntity, produto.get(), itemProduto.getQuantidade(), produto.get().getPreco()));
+            this.verificaSeExisteEstoqueProduto(osEntity);
         }
 
         for (OsItemServicoDto itemServico : osDto.getServicos()) {
@@ -167,6 +165,33 @@ public class OSServiceImpl implements OSService {
 
         osEntity.setValorTotalOrdem(osEntity.totalOs());
         OSRepository.save(osEntity);
+        this.descontaEstoqueProduto(osEntity); // chama metodo para fazer o desconto automatico do estoque quando uma ordem de serviço é lançada
+    }
+
+    private void descontaEstoqueProduto(OsEntity os) {
+
+        for (OsItemProdutoEntity produto : os.getItemProdutoOs()) {
+            double quantidadeParaSubtrair = produto.getQuantidade(); // Obtém a quantidade a ser subtraída
+            double estoqueAtual = produto.getProdutoEntity().getEstoque(); // Obtém o estoque atual
+
+            produto.getProdutoEntity().setEstoque(estoqueAtual - quantidadeParaSubtrair);
+            produtoRepository.save(produto.getProdutoEntity());
+
+        }
+
+    }
+
+    private void verificaSeExisteEstoqueProduto(OsEntity os) {
+
+        for (OsItemProdutoEntity itemProduto : os.getItemProdutoOs()) {
+
+            if (itemProduto.getQuantidade() > itemProduto.getProdutoEntity().getEstoque()) {
+                throw new DataIntegrityViolationException("Quantidade Em Estoque Insuficiente:" +
+                        " Produto " + itemProduto.getProdutoEntity().getDescricao()
+                        + ": Contem : " + itemProduto.getProdutoEntity().getEstoque() + " Em Estoque");
+            }
+
+        }
 
     }
 }
