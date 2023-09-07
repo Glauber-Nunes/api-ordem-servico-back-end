@@ -32,10 +32,10 @@ public class OSServiceImpl implements OSService {
     @Autowired
     private EmailService emailService;
     @Autowired
-    private OsItemProdutoEntityRepository osItemProdutoEntityRepository;
+    private OsItemProdutoRepository osItemProdutoRepository;
 
     @Autowired
-    private OsItemServicoEntityRepository osItemServicoEntityRepository;
+    private OsItemServicoRepository osItemServicoRepository;
 
     @Autowired
     private MapperObjectOsUpdate mapperObjectOs;
@@ -67,11 +67,11 @@ public class OSServiceImpl implements OSService {
         osBancoUpdate.orElseThrow(() -> new ModelNotFound("Ordem Serviço Not Found"));
 
         for (OsProdutoDto osItem : osDto.getProdutos()) {
-            Optional<OsProdutoEntity> itemProduto = osItemProdutoEntityRepository.findById(osItem.getId());
+            Optional<OsProdutoEntity> itemProduto = osItemProdutoRepository.findById(osItem.getId());
             itemProduto.orElseThrow(() -> new ModelNotFound("Not Found Item"));
 
             for (OsServicoDto osItemServico : osDto.getServicos()) {
-                Optional<OsServicoEntity> itemServico = osItemServicoEntityRepository.findById(osItemServico.getId());
+                Optional<OsServicoEntity> itemServico = osItemServicoRepository.findById(osItemServico.getId());
                 itemServico.orElseThrow(() -> new ModelNotFound("Not Found Item Serviço"));
 
                 mapperObjectOs.mapperObjectUpdate(osDto, osBancoUpdate.get(), itemProduto.get(), itemServico.get());

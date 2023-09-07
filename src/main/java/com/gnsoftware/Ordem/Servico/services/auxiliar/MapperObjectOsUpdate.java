@@ -43,13 +43,13 @@ public class MapperObjectOsUpdate {
     @Autowired
     private FornecedorRepository fornecedorRepository;
     @Autowired
-    private OsItemProdutoEntityRepository osItemProdutoEntityRepository;
+    private OsItemProdutoRepository osItemProdutoRepository;
 
     public void mapperObjectUpdate(OsDto osDto, OsEntity osBancoUpdate, OsProdutoEntity osItemProdutoBanco, OsServicoEntity osItemServicoBanco) {
         this.atualizarDadosBasicosOs(osDto, osBancoUpdate); // chama metodo
         this.atualizarOsProdutos(osDto, osBancoUpdate);// chama metodo
         this.atualizarOsServico(osDto, osBancoUpdate);// chama metodo
-        this.atualizarValorTotalOs(osBancoUpdate);// chama metodo
+        this.salvarOsAtualizada(osBancoUpdate);// chama metodo
     }
 
     private void atualizarDadosBasicosOs(OsDto osDto, OsEntity osBancoUpdate) {
@@ -148,7 +148,7 @@ public class MapperObjectOsUpdate {
     }
 
 
-    private void atualizarValorTotalOs(OsEntity osBancoUpdate) {
+    private void salvarOsAtualizada(OsEntity osBancoUpdate) {
 
         osBancoUpdate.setValorTotalOrdem(osBancoUpdate.totalOs());
         OSRepository.save(osBancoUpdate);

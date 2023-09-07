@@ -40,7 +40,7 @@ public class MapperObjectOsSave {
     @Autowired
     private FornecedorRepository fornecedorRepository;
     @Autowired
-    private OsItemProdutoEntityRepository osItemProdutoEntityRepository;
+    private OsItemProdutoRepository osItemProdutoRepository;
 
     public void mapperObjectSave(OsDto osDto, OsEntity osEntity) {
 
