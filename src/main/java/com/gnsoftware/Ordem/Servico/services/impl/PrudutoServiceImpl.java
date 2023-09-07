@@ -34,7 +34,7 @@ public class PrudutoServiceImpl implements ProdutoService {
     public ProdutoDto update(Long id, ProdutoDto dto) {
 
         Optional<ProdutoEntity> entityBanco = produtoRepository.findById(id);
-        entityBanco.orElseThrow(() -> new ModelNotFound("Produto Not Found"));
+        entityBanco.orElseThrow(() -> new ModelNotFound("Produto Not Found ID:" + id));
 
         return this.mapperObject(dto, entityBanco.get());
     }
@@ -44,7 +44,7 @@ public class PrudutoServiceImpl implements ProdutoService {
 
         Optional<ProdutoEntity> produto = produtoRepository.findById(id);
 
-        produto.orElseThrow(() -> new ModelNotFound("Produto Not Found"));
+        produto.orElseThrow(() -> new ModelNotFound("Produto Not Found ID:" + id));
 
         return new ProdutoDto(produto.get());
     }
@@ -62,7 +62,7 @@ public class PrudutoServiceImpl implements ProdutoService {
         if (produtoRepository.existsById(id)) {
             produtoRepository.deleteById(id);
         } else {
-            throw new ModelNotFound("Produto Not Found");
+            throw new ModelNotFound("Produto Not Found ID:" + id);
         }
 
     }

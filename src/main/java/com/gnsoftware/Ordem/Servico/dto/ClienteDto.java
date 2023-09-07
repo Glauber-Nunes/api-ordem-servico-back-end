@@ -1,10 +1,12 @@
 package com.gnsoftware.Ordem.Servico.dto;
 
 import com.gnsoftware.Ordem.Servico.model.ClienteEntity;
+import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotEmpty;
 
 @Data
@@ -21,6 +23,8 @@ public class ClienteDto {
     private String telefone;
     private String email;
     private String endereco;
+    private Perfil perfil;
+
 
     public ClienteDto(ClienteEntity entity) {
         this.id = entity.getId();
@@ -30,6 +34,7 @@ public class ClienteDto {
         this.telefone = entity.getTelefone();
         this.email = entity.getEmail();
         this.endereco = entity.getEndereco();
+        this.perfil = entity.getPerfil();
     }
 
     public ClienteDto(String nome, String cpf) {

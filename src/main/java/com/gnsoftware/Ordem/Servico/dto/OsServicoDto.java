@@ -1,6 +1,7 @@
 package com.gnsoftware.Ordem.Servico.dto;
 
-import com.gnsoftware.Ordem.Servico.model.OsItemProdutoEntity;
+
+import com.gnsoftware.Ordem.Servico.model.OsServicoEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,26 +11,23 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class OsItemProdutoDto{
+public class OsServicoDto {
 
     private Long id;
-
     private Long ordemServico_id;
 
-    private Long produto_id;
-    private double quantidade;
-    private double preco;
-    private double subTotalProduto = 0;
+    private Long servico_id;
+    private Double quantidade;
+    private Double preco;
+    private double subTotalServico = 0;
 
-    public OsItemProdutoDto(OsItemProdutoEntity entity) {
+    public OsServicoDto(OsServicoEntity entity) {
         this.id = entity.getId();
         this.ordemServico_id = entity.getOrdemServico().getId();
-        this.produto_id = entity.getProdutoEntity().getId();
+        this.servico_id = entity.getServicoEntity().getId();
         this.quantidade = entity.getQuantidade();
         this.preco = entity.getPreco();
-        this.subTotalProduto = entity.getSubTotalProduto();
+        this.subTotalServico = entity.subTotal();
     }
-
-
 
 }

@@ -39,9 +39,9 @@ public class OSController {
         return ResponseEntity.status(HttpStatus.OK).body(OSService.findAll());
     }
 
-    @PutMapping("/finalizar-servico/{id}")
-    public ResponseEntity<String> finalizaOs(@PathVariable Long id, @RequestBody OsEntity osEntity) {
-        OSService.finalizaOs(id, osEntity);
+    @PostMapping("/finalizar-servico/{id}")
+    public ResponseEntity<String> finalizaOs(@PathVariable Long id) {
+        OSService.finalizaOs(id);
 
         JSONObject response = new JSONObject();
         response.put("message", "FINALIZADO COM SUCESSO");

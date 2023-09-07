@@ -1,11 +1,13 @@
 package com.gnsoftware.Ordem.Servico.services.impl;
 
-import com.gnsoftware.Ordem.Servico.dto.OsItemProdutoDto;
-import com.gnsoftware.Ordem.Servico.dto.OsItemServicoDto;
 import com.gnsoftware.Ordem.Servico.dto.OsDto;
+import com.gnsoftware.Ordem.Servico.dto.OsProdutoDto;
+import com.gnsoftware.Ordem.Servico.dto.OsServicoDto;
 import com.gnsoftware.Ordem.Servico.model.*;
 import com.gnsoftware.Ordem.Servico.repository.*;
 import com.gnsoftware.Ordem.Servico.services.*;
+import com.gnsoftware.Ordem.Servico.services.auxiliar.MapperObjectOsSave;
+import com.gnsoftware.Ordem.Servico.services.auxiliar.MapperObjectOsUpdate;
 import com.gnsoftware.Ordem.Servico.services.exceptions.DataIntegrityViolationException;
 import com.gnsoftware.Ordem.Servico.services.exceptions.ModelNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,27 +32,27 @@ public class OSServiceImpl implements OSService {
     @Autowired
     private EmailService emailService;
     @Autowired
-    private ServicoRepository servicoRepository;
+    private OsItemProdutoEntityRepository osItemProdutoEntityRepository;
+
+    @Autowired
+    private OsItemServicoEntityRepository osItemServicoEntityRepository;
+
+    @Autowired
+    private MapperObjectOsUpdate mapperObjectOs;
+
+    @Autowired
+    private MapperObjectOsSave mapperObjectOsSave;
+
     @Autowired
     private ProdutoRepository produtoRepository;
-    @Autowired
-    private AtendenteRepository atendenteRepository;
-    @Autowired
-    private SituacaoOrdemRepository situacaoOrdemRepository;
-    @Autowired
-    private ClienteRepository clienteRepository;
-    @Autowired
-    private TecnicoRepository tecnicoRepository;
-    @Autowired
-    private FornecedorRepository fornecedorRepository;
 
     @Override
     @Transactional
     public OsDto save(OsDto osDto) {
 
         OsEntity osEntity = new OsEntity();
-        this.mapperObject(osDto, osEntity);
 
+        mapperObjectOsSave.mapperObjectSave(osDto, osEntity);
         //emailService.enviarEmailOSAberta(osEntity.getClienteEntity(), osDto); //envia email para o clienteEntity
 
         return new OsDto(osEntity, osEntity.getItemServicoOs(), osEntity.getItemProdutoOs());
@@ -58,15 +60,26 @@ public class OSServiceImpl implements OSService {
     }
 
     @Override
-    public OsDto update(Long id, OsDto osDto) {
+    @Transactional
+    public OsDto update(Long id_os, OsDto osDto) {
 
-        Optional<OsEntity> entityBanco = OSRepository.findById(id);
-        entityBanco.orElseThrow(() -> new ModelNotFound("Ordem Serviço Not Found"));
+        Optional<OsEntity> osBancoUpdate = OSRepository.findById(id_os);
+        osBancoUpdate.orElseThrow(() -> new ModelNotFound("Ordem Serviço Not Found"));
 
-        this.mapperObject(osDto, entityBanco.get());
+        for (OsProdutoDto osItem : osDto.getProdutos()) {
+            Optional<OsProdutoEntity> itemProduto = osItemProdutoEntityRepository.findById(osItem.getId());
+            itemProduto.orElseThrow(() -> new ModelNotFound("Not Found Item"));
 
-        return new OsDto(entityBanco.get(), entityBanco.get().getItemServicoOs(), entityBanco.get().getItemProdutoOs());
+            for (OsServicoDto osItemServico : osDto.getServicos()) {
+                Optional<OsServicoEntity> itemServico = osItemServicoEntityRepository.findById(osItemServico.getId());
+                itemServico.orElseThrow(() -> new ModelNotFound("Not Found Item Serviço"));
 
+                mapperObjectOs.mapperObjectUpdate(osDto, osBancoUpdate.get(), itemProduto.get(), itemServico.get());
+
+            }
+        }
+
+        return new OsDto(osBancoUpdate.get(), osBancoUpdate.get().getItemServicoOs(), osBancoUpdate.get().getItemProdutoOs());
     }
 
     @Override
@@ -75,7 +88,7 @@ public class OSServiceImpl implements OSService {
 
         ordemServico.orElseThrow(() -> new ModelNotFound("Ordem De Serviço Não Encontrada"));
 
-        return new OsDto(ordemServico.get());
+        return new OsDto(ordemServico.get(), ordemServico.get().getItemServicoOs(), ordemServico.get().getItemProdutoOs());
     }
 
     @Override
@@ -94,7 +107,8 @@ public class OSServiceImpl implements OSService {
     }
 
     @Override
-    public void finalizaOs(Long id_ordem_servico, OsEntity osEntity) {
+    public void finalizaOs(Long id_ordem_servico) {
+
 
         StatusOrdemServicoEntity statusENCERRADO = statusOrdemServicoService.findById(2L); //faz a busca automatica pelo status encerrado
 
@@ -106,11 +120,11 @@ public class OSServiceImpl implements OSService {
 
         } else {
             osEntityBanco.get().setStatusOrdemServicoEntity(statusENCERRADO);
-            osEntityBanco.get().setDataFechamento(new Date());// coloca a data do fechamento da OrdemServicoEntity assim que a ordemServicoEntity for finalizada pelo usuario
-            OSRepository.saveAndFlush(osEntityBanco.get());
-            emailService.enviarEmailServicoFinalizado(osEntity); // envia email serviço finalizado
+            osEntityBanco.get().setDataFechamento(new Date());
+            this.descontaEstoqueProduto(osEntityBanco.get());
+            OSRepository.save(osEntityBanco.get());
+            // emailService.enviarEmailServicoFinalizado(osEntity); // envia email serviço finalizado
         }
-
 
     }
 
@@ -122,75 +136,15 @@ public class OSServiceImpl implements OSService {
         }
     }
 
-    private void mapperObject(OsDto osDto, OsEntity osEntity) {
-
-        Optional<AtendenteEntity> atendente = atendenteRepository.findById(osDto.getAtendente_id());
-        atendente.orElseThrow(() -> new ModelNotFound("Atendente Not Found"));
-        Optional<SituacaoOrdemEntity> situacaoOrdem = situacaoOrdemRepository.findById(osDto.getSituacaoOrdem_id());
-        situacaoOrdem.orElseThrow(() -> new ModelNotFound("Situaçâo Not Found"));
-        Optional<ClienteEntity> cliente = clienteRepository.findById(osDto.getCliente_id());
-        cliente.orElseThrow(() -> new ModelNotFound("Cliente Not Found"));
-        Optional<TecnicoEntity> tecnico = tecnicoRepository.findById(osDto.getTecnico_id());
-        tecnico.orElseThrow(() -> new ModelNotFound("Tecnico Not Found"));
-        Optional<FornecedorEntity> fornecedor = fornecedorRepository.findById(osDto.getFornecedor_id());
-        fornecedor.orElseThrow(() -> new ModelNotFound("Fornecedor Not Found"));
-        StatusOrdemServicoEntity statusOrdemServicoEntity = statusOrdemServicoService.findById(1L);
-
-        osEntity.setAtendenteEntity(atendente.get());
-        osEntity.setSituacaoOrdemEntity(situacaoOrdem.get());
-        osEntity.setClienteEntity(cliente.get());
-        osEntity.setDescricao(osDto.getDescricao());
-        osEntity.setTecnicoEntity(tecnico.get());
-        osEntity.setDataDoServico(new Date());
-        osEntity.setFornecedorEntity(fornecedor.get());
-        osEntity.setObservacoes(osDto.getObservacoes());
-        osEntity.setStatusOrdemServicoEntity(statusOrdemServicoEntity);
-
-        osEntity.getItemServicoOs().clear();
-        osEntity.getItemProdutoOs().clear();
-
-        for (OsItemProdutoDto itemProduto : osDto.getProdutos()) {
-            Optional<ProdutoEntity> produto = produtoRepository.findById(itemProduto.getProduto_id());
-            produto.orElseThrow(() -> new ModelNotFound("Produto Not Found"));
-            osEntity.getItemProdutoOs().add(new OsItemProdutoEntity(osEntity, produto.get(), itemProduto.getQuantidade(), produto.get().getPreco()));
-            this.verificaSeExisteEstoqueProduto(osEntity);
-        }
-
-        for (OsItemServicoDto itemServico : osDto.getServicos()) {
-            Optional<ServicoEntity> servico = servicoRepository.findById(itemServico.getServico_id());
-            servico.orElseThrow(() -> new ModelNotFound("Serviço Not Found"));
-
-            osEntity.getItemServicoOs().add(new OsItemServicoEntity(osEntity, servico.get(), itemServico.getQuantidade(), servico.get().getPreco()));
-        }
-
-        osEntity.setValorTotalOrdem(osEntity.totalOs());
-        OSRepository.save(osEntity);
-        this.descontaEstoqueProduto(osEntity); // chama metodo para fazer o desconto automatico do estoque quando uma ordem de serviço é lançada
-    }
-
     private void descontaEstoqueProduto(OsEntity os) {
 
-        for (OsItemProdutoEntity produto : os.getItemProdutoOs()) {
+        for (OsProdutoEntity produto : os.getItemProdutoOs()) {
             double quantidadeParaSubtrair = produto.getQuantidade(); // Obtém a quantidade a ser subtraída
             double estoqueAtual = produto.getProdutoEntity().getEstoque(); // Obtém o estoque atual
 
             produto.getProdutoEntity().setEstoque(estoqueAtual - quantidadeParaSubtrair);
+
             produtoRepository.save(produto.getProdutoEntity());
-
-        }
-
-    }
-
-    private void verificaSeExisteEstoqueProduto(OsEntity os) {
-
-        for (OsItemProdutoEntity itemProduto : os.getItemProdutoOs()) {
-
-            if (itemProduto.getQuantidade() > itemProduto.getProdutoEntity().getEstoque()) {
-                throw new DataIntegrityViolationException("Quantidade Em Estoque Insuficiente:" +
-                        " Produto " + itemProduto.getProdutoEntity().getDescricao()
-                        + ": Contem : " + itemProduto.getProdutoEntity().getEstoque() + " Em Estoque");
-            }
-
         }
 
     }

@@ -4,8 +4,6 @@ package com.gnsoftware.Ordem.Servico.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.gnsoftware.Ordem.Servico.dto.OsItemProdutoDto;
-import com.gnsoftware.Ordem.Servico.dto.OsItemServicoDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -46,11 +44,11 @@ public class OsEntity {
 
     @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<OsItemServicoEntity> itemServicoOs = new ArrayList<>();
+    private List<OsServicoEntity> itemServicoOs = new ArrayList<>();
 
     @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<OsItemProdutoEntity> itemProdutoOs = new ArrayList<>();
+    private List<OsProdutoEntity> itemProdutoOs = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "fornecedor_id")
@@ -68,11 +66,11 @@ public class OsEntity {
         double sumProdutos = 0;
         double sumServicos = 0;
 
-        for (OsItemProdutoEntity itemServico : itemProdutoOs) {
+        for (OsProdutoEntity itemServico : itemProdutoOs) {
             sumProdutos = sumProdutos + itemServico.subTotal();
         }
 
-        for (OsItemServicoEntity itemProduto : itemServicoOs) {
+        for (OsServicoEntity itemProduto : itemServicoOs) {
             sumServicos = sumServicos + itemProduto.subTotal();
         }
 

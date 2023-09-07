@@ -2,6 +2,7 @@ package com.gnsoftware.Ordem.Servico.services.impl;
 
 import com.gnsoftware.Ordem.Servico.dto.AtendenteDto;
 import com.gnsoftware.Ordem.Servico.model.AtendenteEntity;
+import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import com.gnsoftware.Ordem.Servico.repository.AtendenteRepository;
 import com.gnsoftware.Ordem.Servico.services.AtendenteService;
 import com.gnsoftware.Ordem.Servico.services.exceptions.DataIntegrityViolationException;
@@ -86,7 +87,7 @@ public class AtendenteServiceImpl implements AtendenteService {
 
         entity.setNome(dto.getNome());
         entity.setCpf(dto.getCpf());
-
+        entity.setPerfil(Perfil.ATENDENTE);
         atendenteRepository.save(entity);
 
     }

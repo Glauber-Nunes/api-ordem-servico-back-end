@@ -1,6 +1,7 @@
 package com.gnsoftware.Ordem.Servico.dto;
 
 import com.gnsoftware.Ordem.Servico.model.AtendenteEntity;
+import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,9 +23,11 @@ public class AtendenteDto {
     @Column(unique = true)
     private String cpf;
 
+    private Perfil perfil;
     public AtendenteDto(AtendenteEntity entity) {
         this.id = entity.getId();
         this.nome = entity.getNome();
         this.cpf = entity.getCpf();
+        this.perfil = entity.getPerfil();
     }
 }

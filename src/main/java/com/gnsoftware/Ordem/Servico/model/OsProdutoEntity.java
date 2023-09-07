@@ -1,13 +1,11 @@
 package com.gnsoftware.Ordem.Servico.model;
 
-import com.gnsoftware.Ordem.Servico.dto.OsItemProdutoDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @Entity
 @Table(name = "os_produto")
-public class OsItemProdutoEntity {
+public class OsProdutoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,21 +26,25 @@ public class OsItemProdutoEntity {
     @JoinColumn(name = "produto_id")
     private ProdutoEntity produtoEntity;
 
-    private double quantidade;
-    private double preco;
-
+    private Double quantidade;
+    private Double preco;
     private double subTotalProduto = 0;
 
-    public OsItemProdutoEntity(OsEntity ordemServico, ProdutoEntity produtoEntity, double quantidade, double preco) {
+    public OsProdutoEntity(OsEntity ordemServico, ProdutoEntity produtoEntity, Double quantidade, Double preco) {
         this.ordemServico = ordemServico;
         this.produtoEntity = produtoEntity;
         this.quantidade = quantidade;
         this.preco = preco;
-        this.subTotalProduto+=subTotal();
+        this.subTotalProduto += subTotal();
     }
 
-    public double subTotal() {
-        return preco * quantidade;
+    @PrePersist
+    @PreUpdate
+    private void calcularSubTotalProduto() {
+        this.subTotalProduto = quantidade * preco;
+    }
+    public Double subTotal() {
+        return quantidade * preco;
     }
 
 }

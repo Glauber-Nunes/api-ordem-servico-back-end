@@ -1,8 +1,8 @@
 package com.gnsoftware.Ordem.Servico.dto;
 
 
-import com.gnsoftware.Ordem.Servico.model.PermissaoEntity;
 import com.gnsoftware.Ordem.Servico.model.UsuarioEntity;
+import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,9 +32,7 @@ public class UsuarioDto {
         this.email = entity.getEmail();
         //this.senha = entity.getSenha();
 
-        for (PermissaoEntity permissao : entity.getPermissoes()) {
-            this.permissoes.add(new PermissaoDto(permissao));
-        }
+
     }
 
 

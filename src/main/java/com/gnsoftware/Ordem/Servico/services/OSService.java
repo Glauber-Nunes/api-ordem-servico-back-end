@@ -17,6 +17,6 @@ public interface OSService {
 
     List<OsDto> findAll();
 
-    void finalizaOs(Long id, OsEntity osEntity);
+    void finalizaOs(Long id);
 
 }

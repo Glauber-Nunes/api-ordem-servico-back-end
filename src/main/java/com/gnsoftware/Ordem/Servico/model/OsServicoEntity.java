@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "os_servico")
-public class OsItemServicoEntity {
+public class OsServicoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +26,11 @@ public class OsItemServicoEntity {
     @JoinColumn(name = "servico_id")
     private ServicoEntity servicoEntity;
 
-    private int quantidade;
-    private double preco;
+    private Double quantidade;
+    private Double preco;
     private double subTotalServico = 0;
 
-
-    public OsItemServicoEntity(OsEntity ordemServico, ServicoEntity servicoEntity, int quantidade, double preco) {
+    public OsServicoEntity(OsEntity ordemServico, ServicoEntity servicoEntity, Double quantidade, Double preco) {
         this.ordemServico = ordemServico;
         this.servicoEntity = servicoEntity;
         this.quantidade = quantidade;
@@ -39,7 +38,12 @@ public class OsItemServicoEntity {
         this.subTotalServico += subTotal();
     }
 
-    public double subTotal() {
-        return preco * quantidade;
+    @PrePersist
+    @PreUpdate
+    private void calcularSubTotalServico() {
+        this.subTotalServico = quantidade * preco;
+    }
+    public Double subTotal() {
+        return quantidade * preco;
     }
 }

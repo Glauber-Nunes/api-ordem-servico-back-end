@@ -2,6 +2,7 @@ package com.gnsoftware.Ordem.Servico.services.impl;
 
 import com.gnsoftware.Ordem.Servico.dto.TecnicoDto;
 import com.gnsoftware.Ordem.Servico.model.TecnicoEntity;
+import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import com.gnsoftware.Ordem.Servico.repository.TecnicoRepository;
 import com.gnsoftware.Ordem.Servico.services.TecnicoService;
 import com.gnsoftware.Ordem.Servico.services.exceptions.ModelNotFound;
@@ -64,6 +65,7 @@ public class TecnicoServiceImpl implements TecnicoService {
 
     private TecnicoDto mapperObject(TecnicoDto dto, TecnicoEntity entity) {
         entity.setNome(dto.getNome());
+        entity.setPerfil(Perfil.TECNICO);
         tecnicoRepository.save(entity);
         return new TecnicoDto(entity);
     }

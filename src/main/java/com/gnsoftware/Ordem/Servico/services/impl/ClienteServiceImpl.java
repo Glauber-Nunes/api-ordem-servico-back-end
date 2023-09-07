@@ -2,6 +2,7 @@ package com.gnsoftware.Ordem.Servico.services.impl;
 
 import com.gnsoftware.Ordem.Servico.dto.ClienteDto;
 import com.gnsoftware.Ordem.Servico.model.ClienteEntity;
+import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import com.gnsoftware.Ordem.Servico.repository.ClienteRepository;
 import com.gnsoftware.Ordem.Servico.services.ClienteService;
 import com.gnsoftware.Ordem.Servico.services.exceptions.DataIntegrityViolationException;
@@ -79,7 +80,7 @@ public class ClienteServiceImpl implements ClienteService {
         entity.setTelefone(dto.getTelefone());
         entity.setEmail(dto.getEmail());
         entity.setEndereco(dto.getEndereco());
-
+        entity.setPerfil(Perfil.CLIENTE);
         clienteRepository.save(entity);
 
         return new ClienteDto(entity);

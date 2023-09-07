@@ -1,5 +1,6 @@
 package com.gnsoftware.Ordem.Servico.model;
 
+import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,4 +25,16 @@ public class ClienteEntity {
     @Email(message = "Email INCORRETO")
     private String email;
     private String endereco;
+    @Column(name = "Perfil")
+    private Perfil perfil;
+
+    public ClienteEntity(Long id, String nome, String cpf, String rg, String telefone, String email, String endereco) {
+        this.id = id;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.rg = rg;
+        this.telefone = telefone;
+        this.email = email;
+        this.endereco = endereco;
+    }
 }
