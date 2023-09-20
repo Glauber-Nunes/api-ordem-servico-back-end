@@ -1,10 +1,20 @@
 package com.gnsoftware.Ordem.Servico.services.impl;
 
 import com.gnsoftware.Ordem.Servico.dto.ClienteDto;
+import com.gnsoftware.Ordem.Servico.dto.OrdemServicoDto;
+import com.gnsoftware.Ordem.Servico.dto.TelefoneDto;
 import com.gnsoftware.Ordem.Servico.model.ClienteEntity;
+import com.gnsoftware.Ordem.Servico.model.EnderecoEntity;
+import com.gnsoftware.Ordem.Servico.model.OrdemServicoEntity;
+import com.gnsoftware.Ordem.Servico.model.TelefoneEntity;
 import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import com.gnsoftware.Ordem.Servico.repository.ClienteRepository;
+import com.gnsoftware.Ordem.Servico.repository.EnderecoRepository;
+import com.gnsoftware.Ordem.Servico.repository.TelefoneRepository;
 import com.gnsoftware.Ordem.Servico.services.ClienteService;
+import com.gnsoftware.Ordem.Servico.services.auxiliar.MapperObjectOsUpdate;
+import com.gnsoftware.Ordem.Servico.services.auxiliar.MapperObjectSaveCliente;
+import com.gnsoftware.Ordem.Servico.services.auxiliar.MapperObjectUpdateCliente;
 import com.gnsoftware.Ordem.Servico.services.exceptions.DataIntegrityViolationException;
 import com.gnsoftware.Ordem.Servico.services.exceptions.ModelNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +31,12 @@ public class ClienteServiceImpl implements ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    @Autowired
+    private MapperObjectSaveCliente mapperObjectSaveCliente;
+
+    @Autowired
+    private MapperObjectUpdateCliente mapperObjectUpdateCliente;
+
     @Override
     @Transactional
     public ClienteDto save(ClienteDto dto) {
@@ -28,9 +44,13 @@ public class ClienteServiceImpl implements ClienteService {
         this.findByExistsCPF(dto); // verifica se o cpf ja esta cadastrado
         this.findByExistsEmail(dto); // verifica se o email ja esta cadastrado
 
-        ClienteEntity entity = new ClienteEntity();
+        TelefoneEntity telefone = new TelefoneEntity();
+        EnderecoEntity endereco = new EnderecoEntity();
+        ClienteEntity clienteEntity = new ClienteEntity();
 
-        return this.mapperObject(entity, dto);
+        mapperObjectSaveCliente.mapperSave(clienteEntity, dto, telefone, endereco);
+
+        return new ClienteDto(clienteEntity, clienteEntity.getTelefone(), clienteEntity.getEndereco());
 
     }
 
@@ -38,10 +58,12 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     public ClienteDto update(Long id, ClienteDto dto) {
 
-        Optional<ClienteEntity> entityBanco = clienteRepository.findById(id);
-        entityBanco.orElseThrow(() -> new ModelNotFound("Cliente Not Found"));
+        Optional<ClienteEntity> clienteBanco = clienteRepository.findById(id);
+        clienteBanco.orElseThrow(() -> new ModelNotFound("Cliente Not Found"));
 
-        return this.mapperObject(entityBanco.get(), dto);
+        mapperObjectUpdateCliente.mapperUpdate(clienteBanco.get(), dto);
+
+        return new ClienteDto(clienteBanco.get(), clienteBanco.get().getTelefone(), clienteBanco.get().getEndereco());
 
     }
 
@@ -52,14 +74,15 @@ public class ClienteServiceImpl implements ClienteService {
 
         cliente.orElseThrow(() -> new ModelNotFound("CLIENTE NÃO ENCONTRADO"));
 
-        return new ClienteDto(cliente.get());
+        return new ClienteDto(cliente.get(), cliente.get().getTelefone(), cliente.get().getEndereco());
     }
+
 
     @Override
     public List<ClienteDto> findAll() {
         List<ClienteEntity> entities = clienteRepository.findAll();
 
-        return entities.stream().map(entity -> new ClienteDto(entity)).collect(Collectors.toList());
+        return entities.stream().map(entity -> new ClienteDto(entity, entity.getTelefone(), entity.getEndereco())).collect(Collectors.toList());
     }
 
     @Override
@@ -72,19 +95,6 @@ public class ClienteServiceImpl implements ClienteService {
         }
     }
 
-    private ClienteDto mapperObject(ClienteEntity entity, ClienteDto dto) {
-
-        entity.setNome(dto.getNome());
-        entity.setCpf(dto.getCpf());
-        entity.setRg(dto.getRg());
-        entity.setTelefone(dto.getTelefone());
-        entity.setEmail(dto.getEmail());
-        entity.setEndereco(dto.getEndereco());
-        entity.setPerfil(Perfil.CLIENTE);
-        clienteRepository.save(entity);
-
-        return new ClienteDto(entity);
-    }
 
     private void findByExistsCPF(ClienteDto clienteDto) {
         if (clienteRepository.existsByCpf(clienteDto.getCpf())) {

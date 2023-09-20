@@ -1,7 +1,6 @@
 package com.gnsoftware.Ordem.Servico.controller;
 
-import com.gnsoftware.Ordem.Servico.dto.OsDto;
-import com.gnsoftware.Ordem.Servico.model.OsEntity;
+import com.gnsoftware.Ordem.Servico.dto.OrdemServicoDto;
 import com.gnsoftware.Ordem.Servico.services.OSService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,22 +19,22 @@ public class OSController {
     private OSService OSService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<OsDto> findById(@PathVariable Long id) {
+    public ResponseEntity<OrdemServicoDto> findById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(OSService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<OsDto> save(@RequestBody OsDto OsDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(OSService.save(OsDto));
+    public ResponseEntity<OrdemServicoDto> save(@RequestBody OrdemServicoDto OrdemServicoDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(OSService.save(OrdemServicoDto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OsDto> update(@PathVariable Long id, @RequestBody OsDto osDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(OSService.update(id, osDto));
+    public ResponseEntity<OrdemServicoDto> update(@PathVariable Long id, @RequestBody OrdemServicoDto ordemServicoDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(OSService.update(id, ordemServicoDto));
     }
 
     @GetMapping
-    public ResponseEntity<List<OsDto>> findAll() {
+    public ResponseEntity<List<OrdemServicoDto>> findAll() {
         return ResponseEntity.status(HttpStatus.OK).body(OSService.findAll());
     }
 

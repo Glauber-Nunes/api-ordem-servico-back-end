@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class FornecedorServiceImpl implements FornecedorService {
 
     @Autowired
-    private FornecedorRepository fornecedorRepository;
+    FornecedorRepository fornecedorRepository;
 
     @Override
     public FornecedorDto save(FornecedorDto dto) {

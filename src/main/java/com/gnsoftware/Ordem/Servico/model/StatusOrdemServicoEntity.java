@@ -6,12 +6,15 @@ import javax.persistence.*;
 
 @Builder
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "status_os")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class StatusOrdemServicoEntity {
 
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

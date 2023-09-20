@@ -12,7 +12,9 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @Table(name = "produto")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ProdutoEntity  {
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,9 +1,8 @@
 package com.gnsoftware.Ordem.Servico.services.impl;
 
-import com.gnsoftware.Ordem.Servico.dto.OsDto;
-import com.gnsoftware.Ordem.Servico.dto.OsProdutoDto;
-import com.gnsoftware.Ordem.Servico.dto.OsServicoDto;
+import com.gnsoftware.Ordem.Servico.dto.OrdemServicoDto;
 import com.gnsoftware.Ordem.Servico.model.*;
+import com.gnsoftware.Ordem.Servico.model.compositekey.ProdutoOrdemEntity;
 import com.gnsoftware.Ordem.Servico.repository.*;
 import com.gnsoftware.Ordem.Servico.services.*;
 import com.gnsoftware.Ordem.Servico.services.auxiliar.MapperObjectOsSave;
@@ -31,11 +30,6 @@ public class OSServiceImpl implements OSService {
 
     @Autowired
     private EmailService emailService;
-    @Autowired
-    private OsItemProdutoRepository osItemProdutoRepository;
-
-    @Autowired
-    private OsItemServicoRepository osItemServicoRepository;
 
     @Autowired
     private MapperObjectOsUpdate mapperObjectOs;
@@ -48,71 +42,61 @@ public class OSServiceImpl implements OSService {
 
     @Override
     @Transactional
-    public OsDto save(OsDto osDto) {
+    public OrdemServicoDto save(OrdemServicoDto ordemServicoDto) {
 
-        OsEntity osEntity = new OsEntity();
+        OrdemServicoEntity ordemServico = new OrdemServicoEntity();
 
-        mapperObjectOsSave.mapperObjectSave(osDto, osEntity);
-        //emailService.enviarEmailOSAberta(osEntity.getClienteEntity(), osDto); //envia email para o clienteEntity
+        mapperObjectOsSave.mapperObjectSave(ordemServicoDto, ordemServico);
 
-        return new OsDto(osEntity, osEntity.getItemServicoOs(), osEntity.getItemProdutoOs());
+        return new OrdemServicoDto(ordemServico, ordemServico.getItemServicoOs(), ordemServico.getItemProdutoOs());
 
     }
 
     @Override
     @Transactional
-    public OsDto update(Long id_os, OsDto osDto) {
+    public OrdemServicoDto update(Long id_os, OrdemServicoDto ordemServicoDto) {
 
-        Optional<OsEntity> osBancoUpdate = OSRepository.findById(id_os);
+        Optional<OrdemServicoEntity> osBancoUpdate = OSRepository.findById(id_os);
         osBancoUpdate.orElseThrow(() -> new ModelNotFound("Ordem Serviço Not Found"));
 
-        for (OsProdutoDto osItem : osDto.getProdutos()) {
-            Optional<OsProdutoEntity> itemProduto = osItemProdutoRepository.findById(osItem.getId());
-            itemProduto.orElseThrow(() -> new ModelNotFound("Not Found Item"));
+        this.verificaSatusOsParaUpdate(osBancoUpdate.get());
 
-            for (OsServicoDto osItemServico : osDto.getServicos()) {
-                Optional<OsServicoEntity> itemServico = osItemServicoRepository.findById(osItemServico.getId());
-                itemServico.orElseThrow(() -> new ModelNotFound("Not Found Item Serviço"));
+        mapperObjectOs.mapperObjectUpdate(ordemServicoDto, osBancoUpdate.get());
 
-                mapperObjectOs.mapperObjectUpdate(osDto, osBancoUpdate.get(), itemProduto.get(), itemServico.get());
-
-            }
-        }
-
-        return new OsDto(osBancoUpdate.get(), osBancoUpdate.get().getItemServicoOs(), osBancoUpdate.get().getItemProdutoOs());
+        return new OrdemServicoDto(osBancoUpdate.get(), osBancoUpdate.get().getItemServicoOs(), osBancoUpdate.get().getItemProdutoOs());
     }
 
     @Override
-    public OsDto findById(Long id) {
-        Optional<OsEntity> ordemServico = OSRepository.findById(id);
+    public OrdemServicoDto findById(Long id) {
+        Optional<OrdemServicoEntity> ordemServico = OSRepository.findById(id);
 
         ordemServico.orElseThrow(() -> new ModelNotFound("Ordem De Serviço Não Encontrada"));
 
-        return new OsDto(ordemServico.get(), ordemServico.get().getItemServicoOs(), ordemServico.get().getItemProdutoOs());
+        return new OrdemServicoDto(ordemServico.get(), ordemServico.get().getItemServicoOs(), ordemServico.get().getItemProdutoOs());
     }
+
 
     @Override
     public void delete(Long id) {
-        Optional<OsEntity> ordemServico = OSRepository.findById(id);
+        Optional<OrdemServicoEntity> ordemServico = OSRepository.findById(id);
         ordemServico.orElseThrow(() -> new ModelNotFound("Ordem De Serviço Não Encontrada"));
 
         OSRepository.delete(ordemServico.get());
     }
 
     @Override
-    public List<OsDto> findAll() {
-        List<OsEntity> entities = OSRepository.findAll();
+    public List<OrdemServicoDto> findAll() {
+        List<OrdemServicoEntity> entities = OSRepository.findAll();
 
-        return entities.stream().map(osEntity -> new OsDto(osEntity)).collect(Collectors.toList());
+        return entities.stream().map(osEntity -> new OrdemServicoDto(osEntity)).collect(Collectors.toList());
     }
 
     @Override
     public void finalizaOs(Long id_ordem_servico) {
 
-
         StatusOrdemServicoEntity statusENCERRADO = statusOrdemServicoService.findById(2L); //faz a busca automatica pelo status encerrado
 
-        Optional<OsEntity> osEntityBanco = OSRepository.findById(id_ordem_servico);
+        Optional<OrdemServicoEntity> osEntityBanco = OSRepository.findById(id_ordem_servico);
         osEntityBanco.orElseThrow(() -> new ModelNotFound("Ordem De Serviço Não Encontrada"));
 
         if (osEntityBanco.get().getStatusOrdemServicoEntity() == statusENCERRADO) {
@@ -123,22 +107,25 @@ public class OSServiceImpl implements OSService {
             osEntityBanco.get().setDataFechamento(new Date());
             this.descontaEstoqueProduto(osEntityBanco.get());
             OSRepository.save(osEntityBanco.get());
+            System.out.println(osEntityBanco.toString());
             // emailService.enviarEmailServicoFinalizado(osEntity); // envia email serviço finalizado
         }
 
     }
 
-    //CONSULTAR SE O ID DO STATUS DA OrdemServicoEntity É IGUAL A ENCERRADO, CASO FOR NÃO DEIXA O USUARIO EDITAR A OrdemServicoEntity
-    private void consultaStatusOs(OsDto osDto) {
+    //CONSULTAR SE O ID DO STATUS DA OrdemServico É IGUAL A ENCERRADO, CASO FOR NÃO DEIXA O USUARIO EDITAR A OrdemServico
+    private void verificaSatusOsParaUpdate(OrdemServicoEntity ordemServico) {
 
-        if (osDto.getStatusOrdemServico_id() == 2L) {
+        StatusOrdemServicoEntity statusEncerrado = statusOrdemServicoService.findById(2L);
+
+        if (ordemServico.getStatusOrdemServicoEntity().equals(statusEncerrado)) {
             throw new DataIntegrityViolationException("VOÇE NÃO PODE EDITAR UMA OS FINALIZADA");
         }
     }
 
-    private void descontaEstoqueProduto(OsEntity os) {
+    private void descontaEstoqueProduto(OrdemServicoEntity os) {
 
-        for (OsProdutoEntity produto : os.getItemProdutoOs()) {
+        for (ProdutoOrdemEntity produto : os.getItemProdutoOs()) {
             double quantidadeParaSubtrair = produto.getQuantidade(); // Obtém a quantidade a ser subtraída
             double estoqueAtual = produto.getProdutoEntity().getEstoque(); // Obtém o estoque atual
 
@@ -148,4 +135,6 @@ public class OSServiceImpl implements OSService {
         }
 
     }
+
+
 }

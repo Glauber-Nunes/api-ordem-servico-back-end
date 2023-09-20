@@ -1,6 +1,6 @@
 package com.gnsoftware.Ordem.Servico.dto;
 
-import com.gnsoftware.Ordem.Servico.model.OsEntity;
+import com.gnsoftware.Ordem.Servico.model.OrdemServicoEntity;
 import com.gnsoftware.Ordem.Servico.model.ServicoEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +21,7 @@ public class ServicoDto {
 
     private double preco;
 
-    private List<OsEntity> ordemServicoServicos = new ArrayList<>();
+    private List<OrdemServicoEntity> ordemServicoServicos = new ArrayList<>();
 
     public ServicoDto(ServicoEntity entity) {
         this.id = entity.getId();

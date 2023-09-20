@@ -2,6 +2,8 @@ package com.gnsoftware.Ordem.Servico.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gnsoftware.Ordem.Servico.model.*;
+import com.gnsoftware.Ordem.Servico.model.compositekey.ProdutoOrdemEntity;
+import com.gnsoftware.Ordem.Servico.model.compositekey.ServicoOrdemEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,11 +13,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OsDto {
+public class OrdemServicoDto {
 
     private Long id;
 
@@ -34,8 +39,9 @@ public class OsDto {
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm", locale = "pt-BR", timezone = "America/Sao_Paulo")
     private Date DataFechamento;
 
-    private List<OsProdutoDto> produtos = new ArrayList<>();
-    private List<OsServicoDto> servicos = new ArrayList<>();
+    private List<ProdutoOrdemDto> produtos = new ArrayList<>();
+
+    private List<ServicoOrdemDto> servicos = new ArrayList<>();
 
     private Long fornecedor_id;
 
@@ -45,8 +51,7 @@ public class OsDto {
 
     private Double valorTotalOrdem;
 
-
-    public OsDto(OsEntity entity, List<OsServicoEntity> itemServicos, List<OsProdutoEntity> itemProdutos) {
+    public OrdemServicoDto(OrdemServicoEntity entity, List<ServicoOrdemEntity> itemServicos, List<ProdutoOrdemEntity> itemProdutos) {
         this.id = entity.getId();
         this.atendente_id = entity.getAtendenteEntity().getId();
         this.situacaoOrdem_id = entity.getSituacaoOrdemEntity().getId();
@@ -59,19 +64,19 @@ public class OsDto {
         this.observacoes = entity.getObservacoes();
         this.statusOrdemServico_id = entity.getStatusOrdemServicoEntity().getId();
 
-        for (OsProdutoEntity produto : itemProdutos) {
-            this.produtos.add(new OsProdutoDto(produto));
+        for (ProdutoOrdemEntity produto : itemProdutos) {
+            this.produtos.add(new ProdutoOrdemDto(produto));
         }
 
-        for (OsServicoEntity servico : itemServicos) {
-            this.servicos.add(new OsServicoDto(servico));
+        for (ServicoOrdemEntity servico : itemServicos) {
+            this.servicos.add(new ServicoOrdemDto(servico));
         }
 
         this.valorTotalOrdem = entity.getValorTotalOrdem();
 
     }
 
-    public OsDto(OsEntity entity) {
+    public OrdemServicoDto(OrdemServicoEntity entity) {
         this.id = entity.getId();
         this.atendente_id = entity.getAtendenteEntity().getId();
         this.situacaoOrdem_id = entity.getSituacaoOrdemEntity().getId();

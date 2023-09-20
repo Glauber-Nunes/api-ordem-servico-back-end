@@ -12,8 +12,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @Table(name = "fornecedor")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class FornecedorEntity {
 
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

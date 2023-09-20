@@ -1,6 +1,7 @@
 package com.gnsoftware.Ordem.Servico.model;
 
 import lombok.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 
@@ -9,10 +10,12 @@ import javax.validation.constraints.Email;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "usuario")
-public class UsuarioEntity  {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class UsuarioEntity {
 
-	private static final long serialVersionUID = 1L;
-	@Id
+    private static final long serialVersionUID = 1L;
+    @EqualsAndHashCode.Include
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;

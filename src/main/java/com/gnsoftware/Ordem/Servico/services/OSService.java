@@ -1,21 +1,20 @@
 package com.gnsoftware.Ordem.Servico.services;
 
-import com.gnsoftware.Ordem.Servico.dto.OsDto;
-import com.gnsoftware.Ordem.Servico.model.OsEntity;
+import com.gnsoftware.Ordem.Servico.dto.OrdemServicoDto;
 
 import java.util.List;
 
 public interface OSService {
 
-    OsDto save(OsDto OsDto);
+    OrdemServicoDto save(OrdemServicoDto OrdemServicoDto);
 
-    OsDto update(Long id, OsDto OsDto);
+    OrdemServicoDto update(Long id, OrdemServicoDto OrdemServicoDto);
 
-    OsDto findById(Long id);
+    OrdemServicoDto findById(Long id);
 
     void delete(Long id);
 
-    List<OsDto> findAll();
+    List<OrdemServicoDto> findAll();
 
     void finalizaOs(Long id);
 

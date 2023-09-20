@@ -1,6 +1,7 @@
 package com.gnsoftware.Ordem.Servico.controller;
 
 import com.gnsoftware.Ordem.Servico.dto.ClienteDto;
+import com.gnsoftware.Ordem.Servico.dto.OrdemServicoDto;
 import com.gnsoftware.Ordem.Servico.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/clientes")
 public class ClienteController {
+
     @Autowired
     private ClienteService clienteService;
 
@@ -24,6 +26,7 @@ public class ClienteController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ClienteDto> update(@PathVariable Long id, @Valid @RequestBody ClienteDto dto) {
+
         return ResponseEntity.status(HttpStatus.OK).body(clienteService.update(id, dto));
     }
 

@@ -5,36 +5,35 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.io.Serializable;
 
 @Entity
 @Builder
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "cliente")
-public class ClienteEntity {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class ClienteEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
-
     private String nome;
-
     private String cpf;
     private String rg;
-    private String telefone;
-    @Email(message = "Email INCORRETO")
+    @Email(message = "Email Incorreto")
     private String email;
-    private String endereco;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "telefone_id")
+    private TelefoneEntity telefone;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "endereco_id")
+    private EnderecoEntity endereco;
+
     @Column(name = "Perfil")
     private Perfil perfil;
 
-    public ClienteEntity(Long id, String nome, String cpf, String rg, String telefone, String email, String endereco) {
-        this.id = id;
-        this.nome = nome;
-        this.cpf = cpf;
-        this.rg = rg;
-        this.telefone = telefone;
-        this.email = email;
-        this.endereco = endereco;
-    }
 }

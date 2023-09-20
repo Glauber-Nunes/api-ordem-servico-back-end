@@ -22,6 +22,6 @@ public class CargaSituacaoOrdemBD implements CommandLineRunner {
         SituacaoOrdemEntity situacaoOrdemEntity3 = new SituacaoOrdemEntity(null, "PRONTO");
         SituacaoOrdemEntity situacaoOrdemEntity4 = new SituacaoOrdemEntity(null, "EM CONSERTO");
 
-       situacaoOrdemRepository.saveAll(Arrays.asList(situacaoOrdemEntity1, situacaoOrdemEntity2, situacaoOrdemEntity3, situacaoOrdemEntity4));
+        situacaoOrdemRepository.saveAll(Arrays.asList(situacaoOrdemEntity1, situacaoOrdemEntity2, situacaoOrdemEntity3, situacaoOrdemEntity4));
     }
 }

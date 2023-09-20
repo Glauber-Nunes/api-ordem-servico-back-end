@@ -4,6 +4,8 @@ package com.gnsoftware.Ordem.Servico.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gnsoftware.Ordem.Servico.model.compositekey.ProdutoOrdemEntity;
+import com.gnsoftware.Ordem.Servico.model.compositekey.ServicoOrdemEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,9 +20,12 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "ordem_servico")
-public class OsEntity {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class OrdemServicoEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @ManyToOne
@@ -42,13 +47,13 @@ public class OsEntity {
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm", locale = "pt-BR", timezone = "America/Sao_Paulo")
     private Date DataFechamento;
 
-    @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "id.ordemServico", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<OsServicoEntity> itemServicoOs = new ArrayList<>();
+    private List<ServicoOrdemEntity> itemServicoOs = new ArrayList<>();
 
-    @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "id.ordemServico", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<OsProdutoEntity> itemProdutoOs = new ArrayList<>();
+    private List<ProdutoOrdemEntity> itemProdutoOs = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "fornecedor_id")
@@ -60,21 +65,21 @@ public class OsEntity {
     @JoinColumn(name = "status_id")
     private StatusOrdemServicoEntity statusOrdemServicoEntity;
 
-    private Double valorTotalOrdem ;
+    private Double valorTotalOrdem;
 
     public Double totalOs() {
         double sumProdutos = 0;
         double sumServicos = 0;
 
-        for (OsProdutoEntity itemServico : itemProdutoOs) {
+        for (ProdutoOrdemEntity itemServico : itemProdutoOs) {
             sumProdutos = sumProdutos + itemServico.subTotal();
         }
 
-        for (OsServicoEntity itemProduto : itemServicoOs) {
+        for (ServicoOrdemEntity itemProduto : itemServicoOs) {
             sumServicos = sumServicos + itemProduto.subTotal();
         }
 
-        return  sumProdutos + sumServicos;
+        return sumProdutos + sumServicos;
     }
 
 }

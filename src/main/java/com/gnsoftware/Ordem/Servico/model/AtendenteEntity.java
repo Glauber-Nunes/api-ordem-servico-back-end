@@ -13,9 +13,11 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table(name = "atendente")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class AtendenteEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     private String nome;

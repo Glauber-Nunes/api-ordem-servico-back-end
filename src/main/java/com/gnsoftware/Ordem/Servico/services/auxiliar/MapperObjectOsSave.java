@@ -1,9 +1,11 @@
 package com.gnsoftware.Ordem.Servico.services.auxiliar;
 
-import com.gnsoftware.Ordem.Servico.dto.OsDto;
-import com.gnsoftware.Ordem.Servico.dto.OsProdutoDto;
-import com.gnsoftware.Ordem.Servico.dto.OsServicoDto;
+import com.gnsoftware.Ordem.Servico.dto.OrdemServicoDto;
+import com.gnsoftware.Ordem.Servico.dto.ProdutoOrdemDto;
+import com.gnsoftware.Ordem.Servico.dto.ServicoOrdemDto;
 import com.gnsoftware.Ordem.Servico.model.*;
+import com.gnsoftware.Ordem.Servico.model.compositekey.ProdutoOrdemEntity;
+import com.gnsoftware.Ordem.Servico.model.compositekey.ServicoOrdemEntity;
 import com.gnsoftware.Ordem.Servico.repository.*;
 import com.gnsoftware.Ordem.Servico.services.EmailService;
 import com.gnsoftware.Ordem.Servico.services.StatusOrdemServicoService;
@@ -39,60 +41,80 @@ public class MapperObjectOsSave {
     private TecnicoRepository tecnicoRepository;
     @Autowired
     private FornecedorRepository fornecedorRepository;
-    @Autowired
-    private OsItemProdutoRepository osItemProdutoRepository;
-
-    public void mapperObjectSave(OsDto osDto, OsEntity osEntity) {
-
-        Optional<AtendenteEntity> atendente = atendenteRepository.findById(osDto.getAtendente_id());
-        atendente.orElseThrow(() -> new ModelNotFound("Atendente Not Found"));
-        Optional<SituacaoOrdemEntity> situacaoOrdem = situacaoOrdemRepository.findById(osDto.getSituacaoOrdem_id());
-        situacaoOrdem.orElseThrow(() -> new ModelNotFound("Situaçâo Not Found"));
-        Optional<ClienteEntity> cliente = clienteRepository.findById(osDto.getCliente_id());
-        cliente.orElseThrow(() -> new ModelNotFound("Cliente Not Found"));
-        Optional<TecnicoEntity> tecnico = tecnicoRepository.findById(osDto.getTecnico_id());
-        tecnico.orElseThrow(() -> new ModelNotFound("Tecnico Not Found"));
-        Optional<FornecedorEntity> fornecedor = fornecedorRepository.findById(osDto.getFornecedor_id());
-        fornecedor.orElseThrow(() -> new ModelNotFound("Fornecedor Not Found"));
-        StatusOrdemServicoEntity statusOrdemServicoEntity = statusOrdemServicoService.findById(1L);
-
-        osEntity.setAtendenteEntity(atendente.get());
-        osEntity.setSituacaoOrdemEntity(situacaoOrdem.get());
-        osEntity.setClienteEntity(cliente.get());
-        osEntity.setDescricao(osDto.getDescricao());
-        osEntity.setTecnicoEntity(tecnico.get());
-        osEntity.setDataDoServico(new Date());
-        osEntity.setFornecedorEntity(fornecedor.get());
-        osEntity.setObservacoes(osDto.getObservacoes());
-        osEntity.setStatusOrdemServicoEntity(statusOrdemServicoEntity);
 
 
-        for (OsProdutoDto osProdutoDto : osDto.getProdutos()) {
-            Optional<ProdutoEntity> produtoEntity = produtoRepository.findById(osProdutoDto.getProduto_id());
-            produtoEntity.orElseThrow(() -> new ModelNotFound("Produto Not Found ID:" + osProdutoDto.getProduto_id()));
+    public void mapperObjectSave(OrdemServicoDto ordemServicoDto, OrdemServicoEntity ordemServicoEntity) {
 
-            OsProdutoEntity osItemProduto = new OsProdutoEntity(osEntity, produtoEntity.get(), osProdutoDto.getQuantidade(), osProdutoDto.getPreco());
-
-            osEntity.getItemProdutoOs().add(osItemProduto);
-            this.estoqueProdutoDisponivel(osEntity); // verifica se tem estoque no produto
-        }
-
-        for (OsServicoDto itemServico : osDto.getServicos()) {
-            Optional<ServicoEntity> servicoEntity = servicoRepository.findById(itemServico.getServico_id());
-            ServicoEntity servico = servicoEntity.orElseThrow(() -> new ModelNotFound("Serviço Not Found ID:" + itemServico.getServico_id()));
-
-            OsServicoEntity osServicoEntity = new OsServicoEntity(osEntity, servico, itemServico.getQuantidade(), itemServico.getPreco());
-            osEntity.getItemServicoOs().add(osServicoEntity);
-        }
-
-        osEntity.setValorTotalOrdem(osEntity.totalOs());
-        OSRepository.save(osEntity);
+        this.salvaCabecalhoOrdemServico(ordemServicoDto, ordemServicoEntity);
+        this.salvaProdutoOrdemServico(ordemServicoDto, ordemServicoEntity);
+        this.salvaServicoOrdemServico(ordemServicoDto, ordemServicoEntity);
+        this.calculaValorTotalSalvaOrdemServico(ordemServicoEntity, ordemServicoDto);
     }
 
+    private void salvaCabecalhoOrdemServico(OrdemServicoDto ordemServicoDto, OrdemServicoEntity ordemServicoEntity) {
 
-    private void estoqueProdutoDisponivel(OsEntity os) {
+        Optional<AtendenteEntity> atendente = atendenteRepository.findById(ordemServicoDto.getAtendente_id());
+        atendente.orElseThrow(() -> new ModelNotFound("Atendente Not Found ID: " + ordemServicoDto.getAtendente_id()));
 
-        for (OsProdutoEntity itemProduto : os.getItemProdutoOs()) {
+        Optional<SituacaoOrdemEntity> situacaoOrdem = situacaoOrdemRepository.findById(ordemServicoDto.getSituacaoOrdem_id());
+        situacaoOrdem.orElseThrow(() -> new ModelNotFound("Situação Not Found ID: " + ordemServicoDto.getSituacaoOrdem_id()));
+
+        Optional<ClienteEntity> cliente = clienteRepository.findById(ordemServicoDto.getCliente_id());
+        cliente.orElseThrow(() -> new ModelNotFound("Cliente Not Found ID:" + ordemServicoDto.getCliente_id()));
+
+        Optional<TecnicoEntity> tecnico = tecnicoRepository.findById(ordemServicoDto.getTecnico_id());
+        tecnico.orElseThrow(() -> new ModelNotFound("Tecnico Not Found ID:" + ordemServicoDto.getTecnico_id()));
+
+        Optional<FornecedorEntity> fornecedor = fornecedorRepository.findById(ordemServicoDto.getFornecedor_id());
+        fornecedor.orElseThrow(() -> new ModelNotFound("Tecnico Not Found ID: " + ordemServicoDto.getFornecedor_id()));
+
+        StatusOrdemServicoEntity statusOrdemServicoEntity = statusOrdemServicoService.findById(1L); // recebe automatico
+
+        ordemServicoEntity.setAtendenteEntity(atendente.get());
+        ordemServicoEntity.setSituacaoOrdemEntity(situacaoOrdem.get());
+        ordemServicoEntity.setClienteEntity(cliente.get());
+        ordemServicoEntity.setDescricao(ordemServicoDto.getDescricao());
+        ordemServicoEntity.setTecnicoEntity(tecnico.get());
+        ordemServicoEntity.setDataDoServico(new Date());
+        ordemServicoEntity.setFornecedorEntity(fornecedor.get());
+        ordemServicoEntity.setObservacoes(ordemServicoDto.getObservacoes());
+        ordemServicoEntity.setStatusOrdemServicoEntity(statusOrdemServicoEntity);
+    }
+
+    private void salvaProdutoOrdemServico(OrdemServicoDto ordemServicoDto, OrdemServicoEntity ordemServicoEntity) {
+
+        for (ProdutoOrdemDto produtoOrdemDto : ordemServicoDto.getProdutos()) {
+
+            Optional<ProdutoEntity> produto = produtoRepository.findById(produtoOrdemDto.getProduto_id());
+            produto.orElseThrow(() -> new ModelNotFound("Produto Not Found ID:" + produtoOrdemDto.getProduto_id()));
+
+            ProdutoOrdemEntity osItemProduto = new ProdutoOrdemEntity(ordemServicoEntity, produto.get(), produtoOrdemDto.getQuantidade(), produto.get().getPreco());
+
+            ordemServicoEntity.getItemProdutoOs().add(osItemProduto);
+            this.estoqueProdutoDisponivel(ordemServicoEntity); // verifica se tem estoque no produto
+        }
+    }
+
+    private void salvaServicoOrdemServico(OrdemServicoDto ordemServicoDto, OrdemServicoEntity ordemServicoEntity) {
+
+        for (ServicoOrdemDto itemServico : ordemServicoDto.getServicos()) {
+            Optional<ServicoEntity> servico = servicoRepository.findById(itemServico.getServico_id());
+            servico.orElseThrow(() -> new ModelNotFound("Serviço Not Found ID:"));
+
+            ServicoOrdemEntity servicoOrdemEntity = new ServicoOrdemEntity(ordemServicoEntity, servico.get(), itemServico.getQuantidade(), servico.get().getPreco());
+            ordemServicoEntity.getItemServicoOs().add(servicoOrdemEntity);
+        }
+    }
+
+    private void calculaValorTotalSalvaOrdemServico(OrdemServicoEntity ordemServicoEntity, OrdemServicoDto ordemServicoDto) {
+        ordemServicoEntity.setValorTotalOrdem(ordemServicoEntity.totalOs());
+        OSRepository.save(ordemServicoEntity);
+        //emailService.enviarEmailOSAberta(osEntity.getClienteEntity(), osDto); //envia email para o clienteEntity
+    }
+
+    private void estoqueProdutoDisponivel(OrdemServicoEntity os) {
+
+        for (ProdutoOrdemEntity itemProduto : os.getItemProdutoOs()) {
 
             if (itemProduto.getQuantidade() > itemProduto.getProdutoEntity().getEstoque()) {
                 throw new DataIntegrityViolationException("Quantidade Em Estoque Insuficiente:" + " Produto " + itemProduto.getProdutoEntity().getDescricao() + ": Contem : " + itemProduto.getProdutoEntity().getEstoque() + " Em Estoque");

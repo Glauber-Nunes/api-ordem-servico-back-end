@@ -1,8 +1,8 @@
 package com.gnsoftware.Ordem.Servico.services.impl;
 
-import com.gnsoftware.Ordem.Servico.dto.OsDto;
+import com.gnsoftware.Ordem.Servico.dto.OrdemServicoDto;
 import com.gnsoftware.Ordem.Servico.model.ClienteEntity;
-import com.gnsoftware.Ordem.Servico.model.OsEntity;
+import com.gnsoftware.Ordem.Servico.model.OrdemServicoEntity;
 import com.gnsoftware.Ordem.Servico.model.UsuarioEntity;
 import com.gnsoftware.Ordem.Servico.services.EmailService;
 import freemarker.template.Configuration;
@@ -34,14 +34,14 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void enviarEmailOSAberta(ClienteEntity clienteEntity, OsDto osDto) {
+    public void enviarEmailOSAberta(ClienteEntity clienteEntity, OrdemServicoDto ordemServicoDto) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         Map<String, Object> propriedades = new HashMap<>();
         propriedades.put("nome", clienteEntity.getNome()); // remetente
         propriedades.put("mensagem1", " SEU SERVIÇO FOI ABERTO COM SUCESSO, EM BREVE VOÇE RECEBERA UM EMAIL QUANDO SEU SERVIÇO FOR CONCLUIDO :)");
-        propriedades.put("mensagem2", " Descrição Do Serviço: " + osDto.getDescricao());
-        propriedades.put("mensagem3", " Valor Total: " + osDto.getValorTotalOrdem());
+        propriedades.put("mensagem2", " Descrição Do Serviço: " + ordemServicoDto.getDescricao());
+        propriedades.put("mensagem3", " Valor Total: " + ordemServicoDto.getValorTotalOrdem());
 
         try {
 
@@ -60,12 +60,12 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void enviarEmailServicoFinalizado(OsEntity osEntity) {
+    public void enviarEmailServicoFinalizado(OrdemServicoEntity ordemServicoEntity) {
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         Map<String, Object> propriedades = new HashMap<>();
-        propriedades.put("nome", osEntity.getClienteEntity().getNome());
+        propriedades.put("nome", ordemServicoEntity.getClienteEntity().getNome());
         propriedades.put("mensagem1", " Seu Serviço Foi finalizado Com Sucesso");
         propriedades.put("mensagem2", "");
         propriedades.put("mensagem3", " VOLTE SEMPRE");
@@ -76,7 +76,7 @@ public class EmailServiceImpl implements EmailService {
 
             mimeMessageHelper.setSubject("Serviço Finalizado Com Sucesso"); // titulo do email
             mimeMessageHelper.setFrom(remetenteproperties);
-            mimeMessageHelper.setTo(osEntity.getClienteEntity().getEmail());
+            mimeMessageHelper.setTo(ordemServicoEntity.getClienteEntity().getEmail());
 
             mimeMessageHelper.setText(this.getConteudoTemplate(propriedades), true);
 
