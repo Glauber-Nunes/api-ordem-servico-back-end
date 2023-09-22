@@ -18,4 +18,8 @@ public interface OSService {
 
     void finalizaOs(Long id);
 
+    OrdemServicoDto removeProdutoDaOrdemDeServico(Long id, Long id_produto);
+
+    OrdemServicoDto removeServicoDaOrdemDeServico(Long id, Long id_servico);
+
 }

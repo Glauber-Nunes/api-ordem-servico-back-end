@@ -17,7 +17,7 @@ public class ProdutoEntity  {
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id_produto;
     @Column(unique = true)
     private String descricao;
     private Double preco;

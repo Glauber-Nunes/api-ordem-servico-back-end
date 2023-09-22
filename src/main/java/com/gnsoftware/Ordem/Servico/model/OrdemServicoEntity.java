@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gnsoftware.Ordem.Servico.model.compositekey.ProdutoOrdemEntity;
 import com.gnsoftware.Ordem.Servico.model.compositekey.ServicoOrdemEntity;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class OrdemServicoEntity {
 
     @OneToMany(mappedBy = "id.ordemServico", cascade = CascadeType.ALL)
     @JsonIgnore
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<ServicoOrdemEntity> itemServicoOs = new ArrayList<>();
 
     @OneToMany(mappedBy = "id.ordemServico", cascade = CascadeType.ALL)
@@ -81,5 +83,4 @@ public class OrdemServicoEntity {
 
         return sumProdutos + sumServicos;
     }
-
 }

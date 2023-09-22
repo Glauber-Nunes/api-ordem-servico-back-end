@@ -15,44 +15,17 @@ import org.springframework.stereotype.Component;
 public class MapperObjectSaveCliente {
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    ClienteRepository clienteRepository;
     @Autowired
-    private TelefoneRepository telefoneRepository;
+    TelefoneRepository telefoneRepository;
     @Autowired
-    private EnderecoRepository enderecoRepository;
+    EnderecoRepository enderecoRepository;
 
     public void mapperSave(ClienteEntity clienteEntity, ClienteDto clienteDto, TelefoneEntity telefone
             , EnderecoEntity endereco) {
 
-        this.saveTelefone(telefone, clienteDto); // chamada do metodo
-        this.saveEndereco(endereco, clienteDto); // chamada do metodo
-        this.saveCliente(clienteEntity, clienteDto, telefone, endereco); // chama metodo
-
-    }
-
-    private void saveCliente(ClienteEntity clienteEntity, ClienteDto clienteDto,
-                             TelefoneEntity telefone, EnderecoEntity endereco) {
-
-        clienteEntity.setNome(clienteDto.getNome());
-        clienteEntity.setCpf(clienteDto.getCpf());
-        clienteEntity.setRg(clienteDto.getRg());
-        clienteEntity.setEmail(clienteDto.getEmail());
-        clienteEntity.setEndereco(endereco);
-        clienteEntity.setTelefone(telefone);
-        clienteEntity.setPerfil(Perfil.CLIENTE);
-
-        clienteRepository.save(clienteEntity);
-    }
-
-    private void saveTelefone(TelefoneEntity telefone, ClienteDto clienteDto) {
-
         telefone.setDd(clienteDto.getTelefone().getDd());
         telefone.setNumero(clienteDto.getTelefone().getNumero());
-
-        telefoneRepository.save(telefone);
-    }
-
-    private void saveEndereco(EnderecoEntity endereco, ClienteDto clienteDto) {
 
         endereco.setRua(clienteDto.getEndereco().getRua());
         endereco.setNumero(clienteDto.getEndereco().getNumero());
@@ -64,8 +37,19 @@ public class MapperObjectSaveCliente {
         endereco.setCep(clienteDto.getEndereco().getCep());
         endereco.setPais(clienteDto.getEndereco().getPais());
 
-        enderecoRepository.save(endereco);
+        clienteEntity.setNome(clienteDto.getNome());
+        clienteEntity.setCpf(clienteDto.getCpf());
+        clienteEntity.setRg(clienteDto.getRg());
+        clienteEntity.setEmail(clienteDto.getEmail());
+        clienteEntity.setEndereco(endereco);
+        clienteEntity.setTelefone(telefone);
+        clienteEntity.setPerfil(Perfil.CLIENTE);
+
+        telefoneRepository.save(telefone);
+        enderecoRepository.saveAndFlush(endereco);
+        clienteRepository.save(clienteEntity);
 
     }
+
 
 }

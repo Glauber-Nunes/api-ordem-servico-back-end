@@ -1,7 +1,6 @@
 package com.gnsoftware.Ordem.Servico.controller;
 
 import com.gnsoftware.Ordem.Servico.dto.AtendenteDto;
-import com.gnsoftware.Ordem.Servico.model.AtendenteEntity;
 import com.gnsoftware.Ordem.Servico.services.AtendenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.Serializable;
 import java.util.List;
 
 @CrossOrigin("*")
@@ -17,7 +17,7 @@ import java.util.List;
 public class AtendenteController {
 
     @Autowired
-    private AtendenteService atendenteService;
+    AtendenteService atendenteService;
 
     @PostMapping
     public ResponseEntity<AtendenteDto> save(@Valid @RequestBody AtendenteDto dto) {

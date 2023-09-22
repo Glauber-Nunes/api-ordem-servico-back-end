@@ -2,7 +2,7 @@ package com.gnsoftware.Ordem.Servico.dto;
 
 
 import com.gnsoftware.Ordem.Servico.model.UsuarioEntity;
-import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +31,6 @@ public class UsuarioDto {
         this.nome = entity.getNome();
         this.email = entity.getEmail();
         //this.senha = entity.getSenha();
-
 
     }
 

@@ -7,40 +7,36 @@ import com.gnsoftware.Ordem.Servico.model.*;
 import com.gnsoftware.Ordem.Servico.model.compositekey.ProdutoOrdemEntity;
 import com.gnsoftware.Ordem.Servico.model.compositekey.ServicoOrdemEntity;
 import com.gnsoftware.Ordem.Servico.repository.*;
-import com.gnsoftware.Ordem.Servico.services.EmailService;
 import com.gnsoftware.Ordem.Servico.services.StatusOrdemServicoService;
 import com.gnsoftware.Ordem.Servico.services.exceptions.DataIntegrityViolationException;
 import com.gnsoftware.Ordem.Servico.services.exceptions.ModelNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
 import java.util.Optional;
 
 @Component
 public class MapperObjectOsUpdate {
     @Autowired
-    private com.gnsoftware.Ordem.Servico.repository.OSRepository OSRepository;
+    com.gnsoftware.Ordem.Servico.repository.OSRepository OSRepository;
 
     @Autowired
-    private StatusOrdemServicoService statusOrdemServicoService;
+    StatusOrdemServicoService statusOrdemServicoService;
 
     @Autowired
-    private EmailService emailService;
+    ServicoRepository servicoRepository;
     @Autowired
-    private ServicoRepository servicoRepository;
+    ProdutoRepository produtoRepository;
     @Autowired
-    private ProdutoRepository produtoRepository;
+    AtendenteRepository atendenteRepository;
     @Autowired
-    private AtendenteRepository atendenteRepository;
+    SituacaoOrdemRepository situacaoOrdemRepository;
     @Autowired
-    private SituacaoOrdemRepository situacaoOrdemRepository;
+    ClienteRepository clienteRepository;
     @Autowired
-    private ClienteRepository clienteRepository;
+    TecnicoRepository tecnicoRepository;
     @Autowired
-    private TecnicoRepository tecnicoRepository;
-    @Autowired
-    private FornecedorRepository fornecedorRepository;
+    FornecedorRepository fornecedorRepository;
 
     public void mapperObjectUpdate(OrdemServicoDto ordemServicoDto, OrdemServicoEntity osBancoUpdate) {
 
@@ -51,6 +47,7 @@ public class MapperObjectOsUpdate {
     }
 
     private void atualizaCabecalhoOrdemServico(OrdemServicoDto ordemServicoDto, OrdemServicoEntity osBancoUpdate) {
+
         Optional<AtendenteEntity> atendente = atendenteRepository.findById(ordemServicoDto.getAtendente_id());
         atendente.orElseThrow(() -> new ModelNotFound("Atendente Not Found ID: " + ordemServicoDto.getAtendente_id()));
 
@@ -81,69 +78,76 @@ public class MapperObjectOsUpdate {
 
     private void atualizaProdutoOrdemServico(OrdemServicoDto ordemServicoDto, OrdemServicoEntity osBancoUpdate) {
 
-        for (ProdutoOrdemDto itemProduto : ordemServicoDto.getProdutos()) {
-            Optional<ProdutoEntity> prod = produtoRepository.findById(itemProduto.getProduto_id());
-            prod.orElseThrow(() -> new ModelNotFound("Produto Not Found ID:"));
+        for (ProdutoOrdemDto itemProdutos : ordemServicoDto.getProdutos()) {
+            Optional<ProdutoEntity> produto = produtoRepository.findById(itemProdutos.getProduto_id());
+            produto.orElseThrow(() -> new ModelNotFound("Produto Não Encontrado"));
 
-            // Verifique se o produto já existe na lista
-            ProdutoOrdemEntity produtoExistente = this.findExistingProduct(osBancoUpdate, prod.get());
+            ProdutoOrdemEntity produtoExistente = this.encontraProdutoExistente(osBancoUpdate, produto.get());
+            this.estoqueProdutoDisponivel(osBancoUpdate);
 
+            //produto existe entao irei atualizar
             if (produtoExistente != null) {
-                // Produto já existe, atualize os valores
-                produtoExistente.setQuantidade(itemProduto.getQuantidade());
-                produtoExistente.setPreco(itemProduto.getPreco());
+                produtoExistente.setPreco(itemProdutos.getPreco() != null ? itemProdutos.getPreco() : produtoExistente.getPreco());
+                produtoExistente.setQuantidade(itemProdutos.getQuantidade() != null ? itemProdutos.getQuantidade() : produtoExistente.getQuantidade());
+
             } else {
-                // Produto não existe, crie um novo
-                ProdutoOrdemEntity itemProdutoBanco = new ProdutoOrdemEntity();
-                itemProdutoBanco.getId().setProdutoEntity(itemProdutoBanco.getProdutoEntity());
-                itemProdutoBanco.setProdutoEntity(prod.get());
-                itemProdutoBanco.setQuantidade(itemProduto.getQuantidade());
-                itemProdutoBanco.setPreco(itemProduto.getPreco());
-                osBancoUpdate.getItemProdutoOs().add(itemProdutoBanco);
+                //adciona um produto ja cadastrado no banco de dados a lista da associaçao produto e os
+                ProdutoOrdemEntity produtoNovo = new ProdutoOrdemEntity();
+                produtoNovo.setOsEntity(osBancoUpdate);
+                produtoNovo.setProdutoEntity(produto.get());
+                produtoNovo.setQuantidade(itemProdutos.getQuantidade() != null ? itemProdutos.getQuantidade() : 0);
+                produtoNovo.setPreco(itemProdutos.getPreco() != null ? itemProdutos.getPreco() : 0);
+                osBancoUpdate.getItemProdutoOs().add(produtoNovo);
+            }
+        }
+
+
+    }
+
+    private void atualizaServicoOrdemServico(OrdemServicoDto ordemServicoDto, OrdemServicoEntity osBancoUpdate) {
+
+        for (ServicoOrdemDto itemServicos : ordemServicoDto.getServicos()) {
+            Optional<ServicoEntity> servico = servicoRepository.findById(itemServicos.getServico_id());
+            servico.orElseThrow(() -> new ModelNotFound("Produto Not Found ID:"));
+
+            // Verifique se o servico já existe na lista
+            ServicoOrdemEntity servicoExistente = this.encontraServicoExistente(osBancoUpdate, servico.get());
+
+            if (servicoExistente != null) {
+                // servico já existe, atualize os valores
+                servicoExistente.setQuantidade(itemServicos.getQuantidade() != null ? itemServicos.getQuantidade() : servicoExistente.getQuantidade());
+                servicoExistente.setPreco(servico.get().getPreco() != null ? itemServicos.getPreco() : servicoExistente.getPreco());
+            } else {
+                ServicoOrdemEntity servicoNovo = new ServicoOrdemEntity();
+                servicoNovo.setOsEntity(osBancoUpdate);
+                servicoNovo.setServicoEntity(servico.get());
+                servicoNovo.setQuantidade(itemServicos.getQuantidade());
+                servicoNovo.setPreco(itemServicos.getPreco());
+                osBancoUpdate.getItemServicoOs().add(servicoNovo);
             }
 
-            estoqueProdutoDisponivel(osBancoUpdate);
         }
     }
 
-    private ProdutoOrdemEntity findExistingProduct(OrdemServicoEntity osBancoUpdate, ProdutoEntity produto) {
+    private void salvarOsAtualizada(OrdemServicoEntity osBancoUpdate) {
+        osBancoUpdate.setValorTotalOrdem(osBancoUpdate.totalOs());
+        OSRepository.save(osBancoUpdate);
+    }
+
+    private ProdutoOrdemEntity encontraProdutoExistente(OrdemServicoEntity osBancoUpdate, ProdutoEntity produto) {
+
         // Iterar sobre a lista de produtos existentes na ordem de serviço
         for (ProdutoOrdemEntity itemProduto : osBancoUpdate.getItemProdutoOs()) {
+
             // Verificar se o produto existe com base no ID
-            if (itemProduto.getProdutoEntity().getId().equals(produto.getId())) {
+            if (itemProduto.getProdutoEntity().getId_produto().equals(produto.getId_produto())) {
                 return itemProduto; // Produto encontrado na lista existente
             }
         }
         return null; // Produto não encontrado na lista existente
     }
 
-    private void atualizaServicoOrdemServico(OrdemServicoDto ordemServicoDto, OrdemServicoEntity osBancoUpdate) {
-
-        for (ServicoOrdemDto itemServico : ordemServicoDto.getServicos()) {
-            Optional<ServicoEntity> serv = servicoRepository.findById(itemServico.getServico_id());
-            serv.orElseThrow(() -> new ModelNotFound("Produto Not Found ID:"));
-
-            // Verifique se o servico já existe na lista
-            ServicoOrdemEntity servicoExistente = this.findExistingServico(osBancoUpdate, serv.get());
-
-            if (servicoExistente != null) {
-                // servico já existe, atualize os valores
-                servicoExistente.setQuantidade(itemServico.getQuantidade());
-                servicoExistente.setPreco(serv.get().getPreco());
-            } else {
-                // Servico não existe, crie um novo
-                ServicoOrdemEntity novoOsServico = new ServicoOrdemEntity();
-                novoOsServico.getId().setOsEntity(osBancoUpdate);
-                novoOsServico.setServicoEntity(serv.get());
-                novoOsServico.setQuantidade(itemServico.getQuantidade());
-                novoOsServico.setPreco(serv.get().getPreco());
-                osBancoUpdate.getItemServicoOs().add(novoOsServico);
-            }
-
-        }
-    }
-
-    private ServicoOrdemEntity findExistingServico(OrdemServicoEntity os, ServicoEntity servico) {
+    private ServicoOrdemEntity encontraServicoExistente(OrdemServicoEntity os, ServicoEntity servico) {
 
         // Iterar sobre a lista de serviços existentes na ordem de serviço
         for (ServicoOrdemEntity iteOsServico : os.getItemServicoOs()) {
@@ -155,11 +159,6 @@ public class MapperObjectOsUpdate {
         return null; // Produto não encontrado na lista existente
     }
 
-
-    private void salvarOsAtualizada(OrdemServicoEntity osBancoUpdate) {
-        osBancoUpdate.setValorTotalOrdem(osBancoUpdate.totalOs());
-        OSRepository.save(osBancoUpdate);
-    }
 
     private void estoqueProdutoDisponivel(OrdemServicoEntity os) {
 

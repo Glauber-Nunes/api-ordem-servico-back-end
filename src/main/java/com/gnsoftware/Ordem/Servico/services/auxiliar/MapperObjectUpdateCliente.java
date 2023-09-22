@@ -14,12 +14,12 @@ import org.springframework.stereotype.Component;
 public class MapperObjectUpdateCliente {
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    ClienteRepository clienteRepository;
     @Autowired
-    private TelefoneRepository telefoneRepository;
+    TelefoneRepository telefoneRepository;
 
     @Autowired
-    private EnderecoRepository enderecoRepository;
+    EnderecoRepository enderecoRepository;
 
     public void mapperUpdate(ClienteEntity clienteBanco, ClienteDto clienteDto) {
 
@@ -34,8 +34,8 @@ public class MapperObjectUpdateCliente {
 
         clienteBanco.setNome(clienteDto.getNome() != null ? clienteDto.getNome() : clienteBanco.getNome());
         clienteBanco.setCpf(clienteDto.getCpf() != null ? clienteDto.getCpf() : clienteBanco.getCpf());
-        clienteBanco.setRg(clienteDto.getRg() != null ? clienteBanco.getRg() : clienteBanco.getRg());
-        clienteBanco.setEmail(clienteDto.getEmail() != null ? clienteBanco.getEmail() : clienteBanco.getEmail());
+        clienteBanco.setRg(clienteDto.getRg() != null ? clienteDto.getRg() : clienteBanco.getRg());
+        clienteBanco.setEmail(clienteDto.getEmail() != null ? clienteDto.getEmail() : clienteBanco.getEmail());
         clienteBanco.setPerfil(clienteBanco.getPerfil());
 
         clienteRepository.saveAndFlush(clienteBanco);

@@ -3,6 +3,7 @@ package com.gnsoftware.Ordem.Servico.services.impl;
 import com.gnsoftware.Ordem.Servico.dto.OrdemServicoDto;
 import com.gnsoftware.Ordem.Servico.model.*;
 import com.gnsoftware.Ordem.Servico.model.compositekey.ProdutoOrdemEntity;
+import com.gnsoftware.Ordem.Servico.model.compositekey.ServicoOrdemEntity;
 import com.gnsoftware.Ordem.Servico.repository.*;
 import com.gnsoftware.Ordem.Servico.services.*;
 import com.gnsoftware.Ordem.Servico.services.auxiliar.MapperObjectOsSave;
@@ -39,6 +40,12 @@ public class OSServiceImpl implements OSService {
 
     @Autowired
     private ProdutoRepository produtoRepository;
+    @Autowired
+    private ProdutoOrdemRepository produtoOrdemRepository;
+    @Autowired
+    private ServicoRepository servicoRepository;
+    @Autowired
+    ServicoOrdemRepository servicoOrdemRepository;
 
     @Override
     @Transactional
@@ -107,10 +114,56 @@ public class OSServiceImpl implements OSService {
             osEntityBanco.get().setDataFechamento(new Date());
             this.descontaEstoqueProduto(osEntityBanco.get());
             OSRepository.save(osEntityBanco.get());
-            System.out.println(osEntityBanco.toString());
             // emailService.enviarEmailServicoFinalizado(osEntity); // envia email serviço finalizado
         }
 
+    }
+
+    @Override
+    @Transactional
+    public OrdemServicoDto removeProdutoDaOrdemDeServico(Long id, Long id_produto) {
+
+        Optional<OrdemServicoEntity> ordemServico = OSRepository.findById(id);
+        ordemServico.orElseThrow(() -> new ModelNotFound("Ordem De Serviço Not Found"));
+
+        Optional<ProdutoEntity> produto = produtoRepository.findById(id_produto);
+        produto.orElseThrow(() -> new ModelNotFound("Produto Not Found"));
+
+        for (ProdutoOrdemEntity produtoOrdemEntity : ordemServico.get().getItemProdutoOs()) {
+
+            if (produtoOrdemEntity.getProdutoEntity().equals(produto.get())) {
+                ordemServico.get().getItemProdutoOs().remove(produtoOrdemEntity);
+                produtoOrdemRepository.delete(produtoOrdemEntity); // exclui relacionamneto do produto
+                break;
+            }
+        }
+        // Salva a ordem de serviço atualizada no banco de dados
+        ordemServico.get().setValorTotalOrdem(ordemServico.get().totalOs());
+        OSRepository.save(ordemServico.get());
+
+        return new OrdemServicoDto(ordemServico.get(), ordemServico.get().getItemServicoOs(), ordemServico.get().getItemProdutoOs());
+    }
+
+    @Override
+    @Transactional
+    public OrdemServicoDto removeServicoDaOrdemDeServico(Long id, Long id_servico) {
+
+        Optional<OrdemServicoEntity> ordemServico = OSRepository.findById(id);
+        ordemServico.orElseThrow(() -> new ModelNotFound("OS Not Found"));
+
+        Optional<ServicoEntity> servico = servicoRepository.findById(id_servico);
+        servico.orElseThrow(() -> new ModelNotFound("Serviço Not Found"));
+
+        for (ServicoOrdemEntity itemServico : ordemServico.get().getItemServicoOs()) {
+            if (itemServico.getServicoEntity().equals(servico.get())) {
+                ordemServico.get().getItemServicoOs().remove(itemServico);
+                servicoOrdemRepository.delete(itemServico);
+                break;
+            }
+        }
+        ordemServico.get().setValorTotalOrdem(ordemServico.get().totalOs()); // atualiza total da ordem de servico
+        OSRepository.save(ordemServico.get());
+        return new OrdemServicoDto(ordemServico.get(), ordemServico.get().getItemServicoOs(), ordemServico.get().getItemProdutoOs());
     }
 
     //CONSULTAR SE O ID DO STATUS DA OrdemServico É IGUAL A ENCERRADO, CASO FOR NÃO DEIXA O USUARIO EDITAR A OrdemServico

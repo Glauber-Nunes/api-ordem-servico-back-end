@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class CargaStatusOrdemServicoBD implements CommandLineRunner {
 
     @Autowired
-    private StatusOrdemServicoRepository statusOrdemServico;
+    StatusOrdemServicoRepository statusOrdemServico;
 
     @Override
     public void run(String... args) throws Exception {
@@ -20,6 +20,6 @@ public class CargaStatusOrdemServicoBD implements CommandLineRunner {
         StatusOrdemServicoEntity ABERTA = new StatusOrdemServicoEntity(null, "ABERTA");
         StatusOrdemServicoEntity ENCERRADA = new StatusOrdemServicoEntity(null, "ENCERRADA");
         StatusOrdemServicoEntity ANDAMENTO = new StatusOrdemServicoEntity(null, "ANDAMENTO");
-        statusOrdemServico.saveAll(Arrays.asList(ABERTA, ENCERRADA,ANDAMENTO));
+        statusOrdemServico.saveAll(Arrays.asList(ABERTA, ENCERRADA, ANDAMENTO));
     }
 }

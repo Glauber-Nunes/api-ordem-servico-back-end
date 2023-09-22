@@ -49,12 +49,24 @@ public class OSController {
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity<String> delete(@PathVariable Long id) {
+    public ResponseEntity<String> delete(@PathVariable Long id) {
         OSService.delete(id);
 
         JSONObject response = new JSONObject();
         response.put("message", "EXCLUIDO COM SUCESSO");
 
         return ResponseEntity.status(HttpStatus.OK).body(response.toString());
+    }
+
+    @DeleteMapping("/{id}/remove-produto/{id_produto}")
+    public ResponseEntity<OrdemServicoDto> removeProdutoDaOrdemDeServico(@PathVariable Long id, @PathVariable Long id_produto) {
+        OSService.removeProdutoDaOrdemDeServico(id, id_produto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(OSService.removeProdutoDaOrdemDeServico(id, id_produto));
+    }
+
+    @DeleteMapping("{id}/remove-servico/{id_servico}")
+    public ResponseEntity<OrdemServicoDto> removeServicoDaOrdemDeServico(@PathVariable Long id, @PathVariable Long id_servico) {
+        return ResponseEntity.status(HttpStatus.OK).body(OSService.removeServicoDaOrdemDeServico(id, id_servico));
     }
 }

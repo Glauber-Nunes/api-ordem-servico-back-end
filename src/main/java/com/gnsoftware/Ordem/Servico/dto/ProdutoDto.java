@@ -25,7 +25,7 @@ public class ProdutoDto {
     private Double estoque;
 
     public ProdutoDto(ProdutoEntity produtoEntity) {
-        this.id = produtoEntity.getId();
+        this.id = produtoEntity.getId_produto();
         this.descricao = produtoEntity.getDescricao();
         this.preco = produtoEntity.getPreco();
         this.codeBarras = produtoEntity.getCodeBarras();

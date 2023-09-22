@@ -19,7 +19,7 @@ public class ProdutoOrdemDto {
 
     public ProdutoOrdemDto(ProdutoOrdemEntity entity) {
         this.ordemServico_id = entity.getOsEntity().getId();
-        this.produto_id = entity.getProdutoEntity().getId();
+        this.produto_id = entity.getProdutoEntity().getId_produto();
         this.quantidade = entity.getQuantidade();
         this.preco = entity.getPreco();
         this.subTotalProduto = entity.subTotal();
