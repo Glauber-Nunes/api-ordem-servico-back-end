@@ -36,7 +36,6 @@ public class MapperObjectUpdateCliente {
         clienteBanco.setCpf(clienteDto.getCpf() != null ? clienteDto.getCpf() : clienteBanco.getCpf());
         clienteBanco.setRg(clienteDto.getRg() != null ? clienteDto.getRg() : clienteBanco.getRg());
         clienteBanco.setEmail(clienteDto.getEmail() != null ? clienteDto.getEmail() : clienteBanco.getEmail());
-        clienteBanco.setPerfil(clienteBanco.getPerfil());
 
         clienteRepository.saveAndFlush(clienteBanco);
 

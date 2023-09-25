@@ -6,6 +6,8 @@ import com.gnsoftware.Ordem.Servico.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
 
@@ -30,6 +32,12 @@ public class CargaClienteBD implements CommandLineRunner {
     @Autowired
     private EnderecoRepository enderecoRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -37,15 +45,23 @@ public class CargaClienteBD implements CommandLineRunner {
         TelefoneEntity telefone2 = new TelefoneEntity(null, "85", "81344245");
         TelefoneEntity telefone3 = new TelefoneEntity(null, "11", "119458445");
 
-       // EnderecoEntity endereco = new EnderecoEntity(null, "rua", "102", "complemneto", "bairro", "cidade",
-            //    "estado", "55405-000", "Brasil");
-    //    enderecoRepository.save(endereco);
-      //  telefoneRepository.saveAll(Arrays.asList(telefone1, telefone2, telefone3));
+        UsuarioEntity usuario = new UsuarioEntity();
+        usuario.setNome("ADMINISTRADOR");
+        usuario.setEmail("adm@gmail.com");
+        usuario.setPerfils(Arrays.asList(Perfil.ADM));
+        usuario.setSenha(passwordEncoder.encode("adm2023"));
 
-       // ClienteEntity clienteEntity = new ClienteEntity(null, "felipe", "155.695.074-85", "7878877", "felipe4@gmail.com", telefone1, endereco, Perfil.CLIENTE);
+        usuarioRepository.save(usuario);
+
+        // EnderecoEntity endereco = new EnderecoEntity(null, "rua", "102", "complemneto", "bairro", "cidade",
+        //    "estado", "55405-000", "Brasil");
+        //    enderecoRepository.save(endereco);
+        //  telefoneRepository.saveAll(Arrays.asList(telefone1, telefone2, telefone3));
+
+        //ClienteEntity clienteEntity = new ClienteEntity(null, "felipe", "155.695.074-85", "7878877", "felipe4@gmail.com", telefone1, endereco, Perfil.CLIENTE);
         // ClienteEntity clienteEntity1 = new ClienteEntity(null, "joao", "262.966.600-06", "4545454", "joao@gmail.com", "rua 3", telefone2);
         // ClienteEntity clienteEntity2 = new ClienteEntity(null, "rafael", "319.386.750-02", "1545454", "rafael@gmail.com", "rua 4", telefone3);
-     //   clienteRepository.save(clienteEntity);
+        //   clienteRepository.save(clienteEntity);
 
 
         AtendenteEntity atendenteEntity = new AtendenteEntity(null, "Felipe", "415.933.010-06");

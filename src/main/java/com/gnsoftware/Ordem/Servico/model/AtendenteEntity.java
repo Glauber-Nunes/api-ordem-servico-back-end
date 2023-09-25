@@ -8,7 +8,6 @@ import javax.persistence.*;
 
 @Entity
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -23,8 +22,6 @@ public class AtendenteEntity {
     private String nome;
     @CPF
     private String cpf;
-    @Column(name = "Perfil")
-    private Perfil perfil;
 
     public AtendenteEntity(Long id, String nome, String cpf) {
         this.id = id;

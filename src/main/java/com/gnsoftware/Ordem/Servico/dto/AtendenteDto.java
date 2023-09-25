@@ -23,11 +23,9 @@ public class AtendenteDto {
     @Column(unique = true)
     private String cpf;
 
-    private Perfil perfil;
     public AtendenteDto(AtendenteEntity entity) {
         this.id = entity.getId();
         this.nome = entity.getNome();
         this.cpf = entity.getCpf();
-        this.perfil = entity.getPerfil();
     }
 }

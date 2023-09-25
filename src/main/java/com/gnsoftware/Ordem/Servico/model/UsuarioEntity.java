@@ -1,9 +1,14 @@
 package com.gnsoftware.Ordem.Servico.model;
 
+import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import lombok.*;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.util.*;
 
 @Entity
 @Data
@@ -23,4 +28,8 @@ public class UsuarioEntity {
     @Column(unique = true)
     private String email;
     private String senha;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "perfis")
+    private List<Perfil> perfils = new ArrayList<>();
 }

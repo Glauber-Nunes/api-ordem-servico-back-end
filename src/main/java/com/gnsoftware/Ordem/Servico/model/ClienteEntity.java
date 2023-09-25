@@ -33,7 +33,4 @@ public class ClienteEntity implements Serializable {
     @JoinColumn(name = "endereco_id")
     private EnderecoEntity endereco;
 
-    @Column(name = "Perfil")
-    private Perfil perfil;
-
 }

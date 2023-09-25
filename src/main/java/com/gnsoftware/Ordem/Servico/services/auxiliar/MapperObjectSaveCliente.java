@@ -43,7 +43,6 @@ public class MapperObjectSaveCliente {
         clienteEntity.setEmail(clienteDto.getEmail());
         clienteEntity.setEndereco(endereco);
         clienteEntity.setTelefone(telefone);
-        clienteEntity.setPerfil(Perfil.CLIENTE);
 
         telefoneRepository.save(telefone);
         enderecoRepository.saveAndFlush(endereco);

@@ -79,6 +79,7 @@ public class MapperObjectOsUpdate {
     private void atualizaProdutoOrdemServico(OrdemServicoDto ordemServicoDto, OrdemServicoEntity osBancoUpdate) {
 
         for (ProdutoOrdemDto itemProdutos : ordemServicoDto.getProdutos()) {
+
             Optional<ProdutoEntity> produto = produtoRepository.findById(itemProdutos.getProduto_id());
             produto.orElseThrow(() -> new ModelNotFound("Produto Não Encontrado"));
 
@@ -113,8 +114,8 @@ public class MapperObjectOsUpdate {
             // Verifique se o servico já existe na lista
             ServicoOrdemEntity servicoExistente = this.encontraServicoExistente(osBancoUpdate, servico.get());
 
+            // servico já existe, atualize os valores
             if (servicoExistente != null) {
-                // servico já existe, atualize os valores
                 servicoExistente.setQuantidade(itemServicos.getQuantidade() != null ? itemServicos.getQuantidade() : servicoExistente.getQuantidade());
                 servicoExistente.setPreco(servico.get().getPreco() != null ? itemServicos.getPreco() : servicoExistente.getPreco());
             } else {

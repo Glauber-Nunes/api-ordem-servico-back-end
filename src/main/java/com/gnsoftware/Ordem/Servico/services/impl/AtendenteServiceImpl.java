@@ -87,7 +87,6 @@ public class AtendenteServiceImpl implements AtendenteService {
 
         entity.setNome(dto.getNome());
         entity.setCpf(dto.getCpf());
-        entity.setPerfil(Perfil.ATENDENTE);
         atendenteRepository.save(entity);
 
     }

@@ -65,7 +65,6 @@ public class TecnicoServiceImpl implements TecnicoService {
 
     private TecnicoDto mapperObject(TecnicoDto dto, TecnicoEntity entity) {
         entity.setNome(dto.getNome());
-        entity.setPerfil(Perfil.TECNICO);
         tecnicoRepository.save(entity);
         return new TecnicoDto(entity);
     }

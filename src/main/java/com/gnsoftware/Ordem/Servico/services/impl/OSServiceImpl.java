@@ -154,10 +154,12 @@ public class OSServiceImpl implements OSService {
         Optional<ServicoEntity> servico = servicoRepository.findById(id_servico);
         servico.orElseThrow(() -> new ModelNotFound("Serviço Not Found"));
 
+        // percorre a ordem de serviço que veio do banco pesquisada
         for (ServicoOrdemEntity itemServico : ordemServico.get().getItemServicoOs()) {
+            //condiçao para verificar se o serviço q esta na minha lista é igual ao serviço que a gente pesquisou
             if (itemServico.getServicoEntity().equals(servico.get())) {
                 ordemServico.get().getItemServicoOs().remove(itemServico);
-                servicoOrdemRepository.delete(itemServico);
+                servicoOrdemRepository.delete(itemServico); // deleta a relaçao do serviço com a ordem de serviço
                 break;
             }
         }

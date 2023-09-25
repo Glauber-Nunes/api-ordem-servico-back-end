@@ -39,7 +39,6 @@ public class ClienteDto {
         this.email = entity.getEmail();
         this.endereco = new EnderecoDto(endereco);
         this.telefone = new TelefoneDto(telefone);
-        this.perfil = entity.getPerfil();
     }
 
 }

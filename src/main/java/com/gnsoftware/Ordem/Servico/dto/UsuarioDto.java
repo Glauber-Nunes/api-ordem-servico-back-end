@@ -3,6 +3,7 @@ package com.gnsoftware.Ordem.Servico.dto;
 
 import com.gnsoftware.Ordem.Servico.model.UsuarioEntity;
 
+import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +11,8 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,7 +25,8 @@ public class UsuarioDto {
     @Column(unique = true)
     private String email;
     private String senha;
-    private List<PermissaoDto> permissoes = new ArrayList<>();
+
+    private Set<Perfil> perfils = new HashSet<>();
 
     public UsuarioDto(UsuarioEntity entity) {
         this.id = entity.getId();

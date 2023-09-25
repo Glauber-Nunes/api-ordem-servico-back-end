@@ -1,9 +1,7 @@
 package com.gnsoftware.Ordem.Servico.model.enums;
 
 public enum Perfil {
-    CLIENTE(0, "ROLE_CLIENTE"),
-    ATENDENTE(1, "ROLE_ATENDENTE"),
-    TECNICO(2, "ROLE_TECNICO");
+    ADM(0, "ROLE_ADM");
 
     private Integer codigo;
     private String descricao;

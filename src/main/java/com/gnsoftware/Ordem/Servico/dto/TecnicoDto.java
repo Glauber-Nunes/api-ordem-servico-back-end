@@ -15,6 +15,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Builder
 public class TecnicoDto {
+
     private Long id;
     @NotBlank(message = "NOME REQUERIDO")
     private String nome;
