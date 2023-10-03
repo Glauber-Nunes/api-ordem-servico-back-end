@@ -6,6 +6,7 @@ import com.gnsoftware.Ordem.Servico.repository.ServicoRepository;
 import com.gnsoftware.Ordem.Servico.services.ServicoService;
 import com.gnsoftware.Ordem.Servico.services.exceptions.ModelNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;

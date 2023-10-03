@@ -26,4 +26,7 @@ public class ProdutoEntity  {
     private String unSaida;
     private Double estoque;
 
+    @ManyToOne
+    @JoinColumn(name = "codNcm_id")
+    private CodigoNcm codigoNcm;
 }

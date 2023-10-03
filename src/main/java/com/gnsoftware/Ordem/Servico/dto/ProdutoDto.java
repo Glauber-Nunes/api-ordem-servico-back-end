@@ -23,6 +23,7 @@ public class ProdutoDto {
     private String unEntrada;
     private String unSaida;
     private Double estoque;
+    private CodigoNcmDto codigoNcmDto;
 
     public ProdutoDto(ProdutoEntity produtoEntity) {
         this.id = produtoEntity.getId_produto();
@@ -32,5 +33,6 @@ public class ProdutoDto {
         this.unEntrada = produtoEntity.getUnEntrada();
         this.unSaida = produtoEntity.getUnSaida();
         this.estoque = produtoEntity.getEstoque();
+        this.codigoNcmDto = new CodigoNcmDto(produtoEntity.getCodigoNcm());
     }
 }

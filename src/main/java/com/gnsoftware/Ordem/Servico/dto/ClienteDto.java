@@ -2,7 +2,6 @@ package com.gnsoftware.Ordem.Servico.dto;
 
 import com.gnsoftware.Ordem.Servico.model.ClienteEntity;
 import com.gnsoftware.Ordem.Servico.model.EnderecoEntity;
-import com.gnsoftware.Ordem.Servico.model.OrdemServicoEntity;
 import com.gnsoftware.Ordem.Servico.model.TelefoneEntity;
 import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import lombok.AllArgsConstructor;
@@ -28,7 +27,7 @@ public class ClienteDto {
     private String email;
     private TelefoneDto telefone;
     private EnderecoDto endereco;
-    private Perfil perfil;
+
 
 
     public ClienteDto(ClienteEntity entity, TelefoneEntity telefone, EnderecoEntity endereco) {

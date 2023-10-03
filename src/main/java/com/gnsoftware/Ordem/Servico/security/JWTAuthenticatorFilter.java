@@ -3,7 +3,6 @@ package com.gnsoftware.Ordem.Servico.security;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gnsoftware.Ordem.Servico.dto.CredencialDto;
-import org.json.JSONObject;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -58,7 +57,6 @@ public class JWTAuthenticatorFilter extends UsernamePasswordAuthenticationFilter
         response.setHeader("Authorization", "Bearer " + token); // Adicione um espaço após "Bearer"
     }
 
-
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
 
@@ -83,5 +81,7 @@ public class JWTAuthenticatorFilter extends UsernamePasswordAuthenticationFilter
             throw new RuntimeException("Erro ao criar resposta JSON", e);
         }
     }
+
+
 
 }

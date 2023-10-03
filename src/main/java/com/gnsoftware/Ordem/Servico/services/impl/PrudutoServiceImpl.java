@@ -1,11 +1,14 @@
 package com.gnsoftware.Ordem.Servico.services.impl;
 
 import com.gnsoftware.Ordem.Servico.dto.ProdutoDto;
+import com.gnsoftware.Ordem.Servico.model.CodigoNcm;
 import com.gnsoftware.Ordem.Servico.model.ProdutoEntity;
+import com.gnsoftware.Ordem.Servico.repository.CodigoNcmRepository;
 import com.gnsoftware.Ordem.Servico.repository.ProdutoRepository;
 import com.gnsoftware.Ordem.Servico.services.ProdutoService;
 import com.gnsoftware.Ordem.Servico.services.exceptions.ModelNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -18,6 +21,10 @@ public class PrudutoServiceImpl implements ProdutoService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    @Autowired
+    private CodigoNcmRepository codigoNcmRepository;
+
+    @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @Override
     @Transactional
     public ProdutoDto save(ProdutoDto dto) {
@@ -28,7 +35,7 @@ public class PrudutoServiceImpl implements ProdutoService {
 
     }
 
-
+    @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @Override
     @Transactional
     public ProdutoDto update(Long id, ProdutoDto dto) {
@@ -38,7 +45,7 @@ public class PrudutoServiceImpl implements ProdutoService {
 
         return this.mapperObject(dto, entityBanco.get());
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @Override
     public ProdutoDto findById(Long id) {
 
@@ -48,14 +55,14 @@ public class PrudutoServiceImpl implements ProdutoService {
 
         return new ProdutoDto(produto.get());
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @Override
     public List<ProdutoDto> findAll() {
         List<ProdutoEntity> entities = produtoRepository.findAll();
 
         return entities.stream().map(produto -> new ProdutoDto(produto)).collect(Collectors.toList());
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @Override
     public void delete(Long id) {
 
@@ -75,6 +82,11 @@ public class PrudutoServiceImpl implements ProdutoService {
         entity.setUnEntrada(dto.getUnEntrada());
         entity.setUnSaida(dto.getUnSaida());
         entity.setEstoque(dto.getEstoque());
+
+        Optional<CodigoNcm> codigoNcm = codigoNcmRepository.findById(dto.getCodigoNcmDto().getId());
+        codigoNcm.orElseThrow(() -> new ModelNotFound("Codigo NCM Não Encontrado na sua base, Verifique Sua Base"));
+
+        entity.setCodigoNcm(codigoNcm.get());
 
         produtoRepository.save(entity);
         return new ProdutoDto(entity);

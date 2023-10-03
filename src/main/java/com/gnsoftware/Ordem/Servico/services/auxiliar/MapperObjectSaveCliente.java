@@ -41,6 +41,8 @@ public class MapperObjectSaveCliente {
         clienteEntity.setCpf(clienteDto.getCpf());
         clienteEntity.setRg(clienteDto.getRg());
         clienteEntity.setEmail(clienteDto.getEmail());
+
+
         clienteEntity.setEndereco(endereco);
         clienteEntity.setTelefone(telefone);
 

@@ -38,8 +38,16 @@ public class CargaClienteBD implements CommandLineRunner {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private CodigoNcmRepository ncmRepository;
+
     @Override
     public void run(String... args) throws Exception {
+
+        CodigoNcm codigoNcm1 = new CodigoNcm(null,"84133020","Bomba injetora motor diesel");
+        CodigoNcm codigoNcm2 = new CodigoNcm(null,"87089990","Borracha descarga/silencioso");
+        ncmRepository.saveAll(Arrays.asList(codigoNcm1,codigoNcm2));
+
 
         TelefoneEntity telefone1 = new TelefoneEntity(null, "81", "8199458445");
         TelefoneEntity telefone2 = new TelefoneEntity(null, "85", "81344245");
@@ -48,7 +56,7 @@ public class CargaClienteBD implements CommandLineRunner {
         UsuarioEntity usuario = new UsuarioEntity();
         usuario.setNome("ADMINISTRADOR");
         usuario.setEmail("adm@gmail.com");
-        usuario.setPerfils(Arrays.asList(Perfil.ADM));
+        usuario.setPerfils(Arrays.asList(Perfil.ROLE_ADM));
         usuario.setSenha(passwordEncoder.encode("adm2023"));
 
         usuarioRepository.save(usuario);
@@ -68,8 +76,8 @@ public class CargaClienteBD implements CommandLineRunner {
         AtendenteEntity atendente2 = new AtendenteEntity(null, "rafaela", "215.430.700-00");
         atendenteRepository.saveAll(Arrays.asList(atendenteEntity, atendente2));
 
-        ProdutoEntity produto1 = new ProdutoEntity(null, "DESCRIÇAO 1", 120.0, "0212121", "UN", "UN", 100.0);
-        ProdutoEntity produto2 = new ProdutoEntity(null, "DESCRIÇAO", 85.0, "2326262", "UN", "UN", 70.0);
+        ProdutoEntity produto1 = new ProdutoEntity(null, "DESCRIÇAO 1", 120.0, "0212121", "UN", "UN", 100.0,codigoNcm1);
+        ProdutoEntity produto2 = new ProdutoEntity(null, "DESCRIÇAO", 85.0, "2326262", "UN", "UN", 70.0,codigoNcm2);
 
         produtoRepository.saveAll(Arrays.asList(produto1, produto2));
 

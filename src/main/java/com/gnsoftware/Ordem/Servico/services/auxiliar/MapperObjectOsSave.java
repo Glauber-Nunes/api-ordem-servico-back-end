@@ -46,49 +46,51 @@ public class MapperObjectOsSave {
     public void mapperObjectSave(OrdemServicoDto ordemServicoDto, OrdemServicoEntity ordemServicoEntity) {
 
         this.salvaCabecalhoOrdemServico(ordemServicoDto, ordemServicoEntity);
-        this.salvaProdutoOrdemServico(ordemServicoDto, ordemServicoEntity);
         this.salvaServicoOrdemServico(ordemServicoDto, ordemServicoEntity);
+        this.salvaProdutoOrdemServico(ordemServicoDto, ordemServicoEntity);
         this.calculaValorTotalSalvaOrdemServico(ordemServicoEntity, ordemServicoDto);
     }
 
-    private void salvaCabecalhoOrdemServico(OrdemServicoDto ordemServicoDto, OrdemServicoEntity ordemServicoEntity) {
+    private void salvaCabecalhoOrdemServico(OrdemServicoDto dto, OrdemServicoEntity ordemServicoEntity) {
 
-        Optional<AtendenteEntity> atendente = atendenteRepository.findById(ordemServicoDto.getAtendente_id());
-        atendente.orElseThrow(() -> new ModelNotFound("Atendente Not Found ID: " + ordemServicoDto.getAtendente_id()));
+        Optional<AtendenteEntity> atendente = atendenteRepository.findById(dto.getAtendente());
+        atendente.orElseThrow(() -> new ModelNotFound("Atendente Not Found ID:"));
 
-        Optional<SituacaoOrdemEntity> situacaoOrdem = situacaoOrdemRepository.findById(ordemServicoDto.getSituacaoOrdem_id());
-        situacaoOrdem.orElseThrow(() -> new ModelNotFound("Situação Not Found ID: " + ordemServicoDto.getSituacaoOrdem_id()));
+        Optional<SituacaoOrdemEntity> situacaoOrdem = situacaoOrdemRepository.findById(dto.getSituacaoOrdem());
+        situacaoOrdem.orElseThrow(() -> new ModelNotFound("Situação Not Found ID:"));
 
-        Optional<ClienteEntity> cliente = clienteRepository.findById(ordemServicoDto.getCliente_id());
-        cliente.orElseThrow(() -> new ModelNotFound("Cliente Not Found ID:" + ordemServicoDto.getCliente_id()));
+        Optional<ClienteEntity> cliente = clienteRepository.findById(dto.getCliente());
+        cliente.orElseThrow(() -> new ModelNotFound("Cliente Not Found ID:" ));
 
-        Optional<TecnicoEntity> tecnico = tecnicoRepository.findById(ordemServicoDto.getTecnico_id());
-        tecnico.orElseThrow(() -> new ModelNotFound("Tecnico Not Found ID:" + ordemServicoDto.getTecnico_id()));
+        Optional<TecnicoEntity> tecnico = tecnicoRepository.findById(dto.getTecnico());
+        tecnico.orElseThrow(() -> new ModelNotFound("Tecnico Not Found ID:" ));
 
-        Optional<FornecedorEntity> fornecedor = fornecedorRepository.findById(ordemServicoDto.getFornecedor_id());
-        fornecedor.orElseThrow(() -> new ModelNotFound("Tecnico Not Found ID: " + ordemServicoDto.getFornecedor_id()));
+        Optional<FornecedorEntity> fornecedor = fornecedorRepository.findById(dto.getFornecedor());
+        fornecedor.orElseThrow(() -> new ModelNotFound("Tecnico Not Found ID: "));
 
         StatusOrdemServicoEntity statusOrdemServicoEntity = statusOrdemServicoService.findById(1L); // recebe automatico
 
         ordemServicoEntity.setAtendenteEntity(atendente.get());
         ordemServicoEntity.setSituacaoOrdemEntity(situacaoOrdem.get());
         ordemServicoEntity.setClienteEntity(cliente.get());
-        ordemServicoEntity.setDescricao(ordemServicoDto.getDescricao());
+        ordemServicoEntity.setDescricao(dto.getDescricao());
         ordemServicoEntity.setTecnicoEntity(tecnico.get());
         ordemServicoEntity.setDataDoServico(new Date());
         ordemServicoEntity.setFornecedorEntity(fornecedor.get());
-        ordemServicoEntity.setObservacoes(ordemServicoDto.getObservacoes());
+        ordemServicoEntity.setObservacoes(dto.getObservacoes());
         ordemServicoEntity.setStatusOrdemServicoEntity(statusOrdemServicoEntity);
     }
 
     private void salvaProdutoOrdemServico(OrdemServicoDto ordemServicoDto, OrdemServicoEntity ordemServicoEntity) {
 
+        //Este é um loop que itera sobre a lista de produtos associados à ordem de serviço
         for (ProdutoOrdemDto produtoOrdemDto : ordemServicoDto.getProdutos()) {
 
-            Optional<ProdutoEntity> produto = produtoRepository.findById(produtoOrdemDto.getProduto_id());
-            produto.orElseThrow(() -> new ModelNotFound("Produto Not Found ID:" + produtoOrdemDto.getProduto_id()));
+            Optional<ProdutoEntity> produto = produtoRepository.findById(produtoOrdemDto.getProduto());
+            produto.orElseThrow(() -> new ModelNotFound("Produto Not Found ID:" ));
 
-            ProdutoOrdemEntity osItemProduto = new ProdutoOrdemEntity(ordemServicoEntity, produto.get(), produtoOrdemDto.getQuantidade(), produto.get().getPreco());
+            ProdutoOrdemEntity osItemProduto = new ProdutoOrdemEntity(ordemServicoEntity, produto.get(),
+                    produtoOrdemDto.getQuantidade(), produto.get().getPreco());
 
             ordemServicoEntity.getItemProdutoOs().add(osItemProduto);
             this.estoqueProdutoDisponivel(ordemServicoEntity); // verifica se tem estoque no produto
@@ -98,7 +100,8 @@ public class MapperObjectOsSave {
     private void salvaServicoOrdemServico(OrdemServicoDto ordemServicoDto, OrdemServicoEntity ordemServicoEntity) {
 
         for (ServicoOrdemDto itemServico : ordemServicoDto.getServicos()) {
-            Optional<ServicoEntity> servico = servicoRepository.findById(itemServico.getServico_id());
+
+            Optional<ServicoEntity> servico = servicoRepository.findById(itemServico.getServico());
             servico.orElseThrow(() -> new ModelNotFound("Serviço Not Found ID:"));
 
             ServicoOrdemEntity servicoOrdemEntity = new ServicoOrdemEntity(ordemServicoEntity, servico.get(), itemServico.getQuantidade(), servico.get().getPreco());

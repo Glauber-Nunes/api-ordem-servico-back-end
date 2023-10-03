@@ -95,7 +95,7 @@ public class OSServiceImpl implements OSService {
     public List<OrdemServicoDto> findAll() {
         List<OrdemServicoEntity> entities = OSRepository.findAll();
 
-        return entities.stream().map(osEntity -> new OrdemServicoDto(osEntity)).collect(Collectors.toList());
+        return entities.stream().map(osEntity -> new OrdemServicoDto(osEntity, osEntity.getItemServicoOs(), osEntity.getItemProdutoOs())).collect(Collectors.toList());
     }
 
     @Override

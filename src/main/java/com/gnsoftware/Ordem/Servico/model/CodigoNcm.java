@@ -6,25 +6,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import java.util.List;
 
 @Entity
+@Table(name = "tb_ncm")
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "telefone")
-public class TelefoneEntity {
+@AllArgsConstructor
+public class CodigoNcm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String dd;
     private String numero;
-
-    public TelefoneEntity(Long id, String dd, String numero) {
-        this.id = id;
-        this.dd = dd;
-        this.numero = numero;
-    }
+    private String descricao;
 }
