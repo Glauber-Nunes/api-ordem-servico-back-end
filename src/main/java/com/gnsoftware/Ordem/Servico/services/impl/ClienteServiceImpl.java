@@ -61,7 +61,23 @@ public class ClienteServiceImpl implements ClienteService {
         Optional<ClienteEntity> clienteBanco = clienteRepository.findById(id);
         clienteBanco.orElseThrow(() -> new ModelNotFound("Cliente Not Found"));
 
+        if (!clienteBanco.get().getCpf().equals(dto.getCpf())){
+            this.findByExistsCPF(dto); // verifica se o cpf ja esta cadastrado ao atualizar
+        }
+
+        if (!clienteBanco.get().getEmail().equals(dto.getEmail())){
+            this.findByExistsEmail(dto);
+        }
+
         mapperObjectUpdateCliente.mapperUpdate(clienteBanco.get(), dto);
+
+        if (!clienteBanco.get().getCpf().equals(dto.getCpf())){
+            this.findByExistsCPF(dto); // verifica se o cpf ja esta cadastrado ao atualizar
+        }
+
+        if (!clienteBanco.get().getEmail().equals(dto.getEmail())){
+            this.findByExistsEmail(dto);
+        }
 
         return new ClienteDto(clienteBanco.get(), clienteBanco.get().getTelefone(), clienteBanco.get().getEndereco());
 

@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
 
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/atendentes")
 public class AtendenteController {

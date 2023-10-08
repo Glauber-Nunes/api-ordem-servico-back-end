@@ -56,6 +56,6 @@ public class ServicoOrdemEntity {
     }
 
     public Double subTotal() {
-        return quantidade * preco;
+        return this.quantidade * preco;
     }
 }

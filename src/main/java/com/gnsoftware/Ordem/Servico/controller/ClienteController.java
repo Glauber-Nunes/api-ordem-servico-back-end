@@ -28,7 +28,7 @@ public class ClienteController {
 
     @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @PutMapping("/{id}")
-    public ResponseEntity<ClienteDto> update(@PathVariable Long id, @Valid @RequestBody ClienteDto dto) {
+    public ResponseEntity<ClienteDto> update(@Valid @PathVariable Long id, @Valid @RequestBody ClienteDto dto) {
 
         return ResponseEntity.status(HttpStatus.OK).body(clienteService.update(id, dto));
     }

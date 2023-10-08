@@ -11,6 +11,9 @@ import com.gnsoftware.Ordem.Servico.repository.TelefoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.util.Date;
+
 @Component
 public class MapperObjectSaveCliente {
 
@@ -42,9 +45,9 @@ public class MapperObjectSaveCliente {
         clienteEntity.setRg(clienteDto.getRg());
         clienteEntity.setEmail(clienteDto.getEmail());
 
-
         clienteEntity.setEndereco(endereco);
         clienteEntity.setTelefone(telefone);
+        clienteEntity.setDataCadastro(new Date());
 
         telefoneRepository.save(telefone);
         enderecoRepository.saveAndFlush(endereco);

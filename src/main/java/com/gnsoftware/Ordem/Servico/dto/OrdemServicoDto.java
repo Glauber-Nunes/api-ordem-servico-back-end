@@ -6,6 +6,7 @@ import com.gnsoftware.Ordem.Servico.model.compositekey.ProdutoOrdemEntity;
 import com.gnsoftware.Ordem.Servico.model.compositekey.ServicoOrdemEntity;
 import lombok.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,15 +18,16 @@ public class OrdemServicoDto {
 
     private long id;
 
-    private long atendente;
+    private AtendenteDto atendente;
 
-    private long situacaoOrdem;
+    private SituacaoOrdemDto situacaoOrdem;
 
-    private long cliente;
+    private ClienteDto cliente;
 
     private String descricao;
 
-    private long tecnico;
+    private TecnicoDto tecnico;
+
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm", locale = "pt-BR", timezone = "America/Sao_Paulo")
     private Date dataDoServico;
 
@@ -36,26 +38,26 @@ public class OrdemServicoDto {
 
     private List<ServicoOrdemDto> servicos = new ArrayList<>();
 
-    private long fornecedor;
+    private FornecedorDto fornecedor;
 
     private String observacoes;
 
-    private long statusOrdemServico;
+    private StatusOrdemServicoDto statusOrdemServico;
 
     private Double valorTotalOrdem;
 
     public OrdemServicoDto(OrdemServicoEntity entity, List<ServicoOrdemEntity> itemServicos, List<ProdutoOrdemEntity> itemProdutos) {
         this.id = entity.getId();
-        this.atendente = entity.getAtendenteEntity().getId();
-        this.situacaoOrdem = entity.getSituacaoOrdemEntity().getId();
-        this.cliente = entity.getClienteEntity().getId();
+        this.atendente = new AtendenteDto(entity.getAtendenteEntity());
+        this.situacaoOrdem = new SituacaoOrdemDto(entity.getSituacaoOrdemEntity());
+        this.cliente = new ClienteDto(entity.getClienteEntity());
         this.descricao = entity.getDescricao();
-        this.tecnico = entity.getTecnicoEntity().getId();
+        this.tecnico = new TecnicoDto(entity.getTecnicoEntity());
         dataDoServico = entity.getDataDoServico();
         dataFechamento = entity.getDataFechamento();
-        this.fornecedor = entity.getFornecedorEntity().getId();
+        this.fornecedor = new FornecedorDto(entity.getFornecedorEntity());
         this.observacoes = entity.getObservacoes();
-        this.statusOrdemServico = entity.getStatusOrdemServicoEntity().getId();
+        this.statusOrdemServico = new StatusOrdemServicoDto(entity.getStatusOrdemServicoEntity());
 
         for (ProdutoOrdemEntity produto : itemProdutos) {
             this.produtos.add(new ProdutoOrdemDto(produto));
@@ -71,16 +73,16 @@ public class OrdemServicoDto {
 
     public OrdemServicoDto(OrdemServicoEntity entity) {
         this.id = entity.getId();
-        this.atendente = entity.getAtendenteEntity().getId();
-        this.situacaoOrdem = entity.getSituacaoOrdemEntity().getId();
-        this.cliente = entity.getClienteEntity().getId();
+        this.atendente = new AtendenteDto(entity.getAtendenteEntity());
+        this.situacaoOrdem = new SituacaoOrdemDto(entity.getSituacaoOrdemEntity());
+        this.cliente = new ClienteDto(entity.getClienteEntity());
         this.descricao = entity.getDescricao();
-        this.tecnico = entity.getTecnicoEntity().getId();
+        this.tecnico = new TecnicoDto(entity.getTecnicoEntity());
         dataDoServico = entity.getDataDoServico();
         dataFechamento = entity.getDataFechamento();
-        this.fornecedor = entity.getFornecedorEntity().getId();
+        this.fornecedor = new FornecedorDto(entity.getFornecedorEntity());
         this.observacoes = entity.getObservacoes();
-        this.statusOrdemServico = entity.getStatusOrdemServicoEntity().getId();
+        this.statusOrdemServico = new StatusOrdemServicoDto(entity.getStatusOrdemServicoEntity());
     }
 
 }

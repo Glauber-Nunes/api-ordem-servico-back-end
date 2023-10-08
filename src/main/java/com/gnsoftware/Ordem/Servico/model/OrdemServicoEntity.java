@@ -69,6 +69,9 @@ public class OrdemServicoEntity {
 
     private Double valorTotalOrdem;
 
+
+
+
     public Double totalOs() {
         double sumProdutos = 0;
         double sumServicos = 0;

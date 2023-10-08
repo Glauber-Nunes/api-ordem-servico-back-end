@@ -1,6 +1,7 @@
 package com.gnsoftware.Ordem.Servico.services;
 
 import com.gnsoftware.Ordem.Servico.dto.OrdemServicoDto;
+import com.gnsoftware.Ordem.Servico.model.OrdemServicoEntity;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface OSService {
 
     List<OrdemServicoDto> findAll();
 
-    void finalizaOs(Long id);
+    OrdemServicoEntity finalizaOs(Long id_os,OrdemServicoEntity ordemServico);
 
     OrdemServicoDto removeProdutoDaOrdemDeServico(Long id, Long id_produto);
 

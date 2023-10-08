@@ -1,6 +1,7 @@
 package com.gnsoftware.Ordem.Servico.controller;
 
 import com.gnsoftware.Ordem.Servico.dto.OrdemServicoDto;
+import com.gnsoftware.Ordem.Servico.model.OrdemServicoEntity;
 import com.gnsoftware.Ordem.Servico.services.OSService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,14 +46,10 @@ public class OSController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADM')")
-    @PostMapping("/finalizar-servico/{id}")
-    public ResponseEntity<String> finalizaOs(@PathVariable Long id) {
-        OSService.finalizaOs(id);
+    @PutMapping("/finalizar-servico/{id_os}")
+    public ResponseEntity<OrdemServicoEntity> finalizaOs(@PathVariable Long id_os, @RequestBody OrdemServicoEntity ordemServico) {
 
-        JSONObject response = new JSONObject();
-        response.put("message", "FINALIZADO COM SUCESSO");
-
-        return ResponseEntity.status(HttpStatus.OK).body(response.toString());
+        return ResponseEntity.status(HttpStatus.OK).body(OSService.finalizaOs(id_os,ordemServico));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADM')")

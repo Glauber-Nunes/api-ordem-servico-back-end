@@ -82,7 +82,6 @@ public class OSServiceImpl implements OSService {
         return new OrdemServicoDto(ordemServico.get(), ordemServico.get().getItemServicoOs(), ordemServico.get().getItemProdutoOs());
     }
 
-
     @Override
     public void delete(Long id) {
         Optional<OrdemServicoEntity> ordemServico = OSRepository.findById(id);
@@ -99,11 +98,11 @@ public class OSServiceImpl implements OSService {
     }
 
     @Override
-    public void finalizaOs(Long id_ordem_servico) {
+    public OrdemServicoEntity finalizaOs(Long id_os, OrdemServicoEntity ordemServico) {
 
         StatusOrdemServicoEntity statusENCERRADO = statusOrdemServicoService.findById(2L); //faz a busca automatica pelo status encerrado
 
-        Optional<OrdemServicoEntity> osEntityBanco = OSRepository.findById(id_ordem_servico);
+        Optional<OrdemServicoEntity> osEntityBanco = OSRepository.findById(id_os);
         osEntityBanco.orElseThrow(() -> new ModelNotFound("Ordem De Serviço Não Encontrada"));
 
         if (osEntityBanco.get().getStatusOrdemServicoEntity() == statusENCERRADO) {
@@ -113,10 +112,11 @@ public class OSServiceImpl implements OSService {
             osEntityBanco.get().setStatusOrdemServicoEntity(statusENCERRADO);
             osEntityBanco.get().setDataFechamento(new Date());
             this.descontaEstoqueProduto(osEntityBanco.get());
-            OSRepository.save(osEntityBanco.get());
+            OSRepository.saveAndFlush(osEntityBanco.get());
             // emailService.enviarEmailServicoFinalizado(osEntity); // envia email serviço finalizado
         }
 
+        return osEntityBanco.get();
     }
 
     @Override

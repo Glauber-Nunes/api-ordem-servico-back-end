@@ -1,5 +1,6 @@
 package com.gnsoftware.Ordem.Servico.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gnsoftware.Ordem.Servico.model.ClienteEntity;
 import com.gnsoftware.Ordem.Servico.model.EnderecoEntity;
 import com.gnsoftware.Ordem.Servico.model.TelefoneEntity;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -27,8 +29,8 @@ public class ClienteDto {
     private String email;
     private TelefoneDto telefone;
     private EnderecoDto endereco;
-
-
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm", locale = "pt-BR", timezone = "America/Sao_Paulo")
+    private Date dataCadastro;
 
     public ClienteDto(ClienteEntity entity, TelefoneEntity telefone, EnderecoEntity endereco) {
         this.id = entity.getId();
@@ -38,6 +40,15 @@ public class ClienteDto {
         this.email = entity.getEmail();
         this.endereco = new EnderecoDto(endereco);
         this.telefone = new TelefoneDto(telefone);
+        this.dataCadastro = entity.getDataCadastro();
+    }
+
+    public ClienteDto(ClienteEntity entity) {
+        this.id = entity.getId();
+        this.nome = entity.getNome();
+        this.cpf = entity.getCpf();
+        this.rg = entity.getRg();
+        this.email = entity.getEmail();
     }
 
 }

@@ -48,19 +48,19 @@ public class MapperObjectOsUpdate {
 
     private void atualizaCabecalhoOrdemServico(OrdemServicoDto dto, OrdemServicoEntity osBancoUpdate) {
 
-        Optional<AtendenteEntity> atendente = atendenteRepository.findById(dto.getAtendente());
+        Optional<AtendenteEntity> atendente = atendenteRepository.findById(dto.getAtendente().getId());
         atendente.orElseThrow(() -> new ModelNotFound("Atendente Not Found ID:"));
 
-        Optional<SituacaoOrdemEntity> situacaoOrdem = situacaoOrdemRepository.findById(dto.getSituacaoOrdem());
+        Optional<SituacaoOrdemEntity> situacaoOrdem = situacaoOrdemRepository.findById(dto.getSituacaoOrdem().getId());
         situacaoOrdem.orElseThrow(() -> new ModelNotFound("Situação Not Found ID:"));
 
-        Optional<ClienteEntity> cliente = clienteRepository.findById(dto.getCliente());
+        Optional<ClienteEntity> cliente = clienteRepository.findById(dto.getCliente().getId());
         cliente.orElseThrow(() -> new ModelNotFound("Cliente Not Found ID:" ));
 
-        Optional<TecnicoEntity> tecnico = tecnicoRepository.findById(dto.getTecnico());
+        Optional<TecnicoEntity> tecnico = tecnicoRepository.findById(dto.getTecnico().getId());
         tecnico.orElseThrow(() -> new ModelNotFound("Tecnico Not Found ID:" ));
 
-        Optional<FornecedorEntity> fornecedor = fornecedorRepository.findById(dto.getFornecedor());
+        Optional<FornecedorEntity> fornecedor = fornecedorRepository.findById(dto.getFornecedor().getId());
         fornecedor.orElseThrow(() -> new ModelNotFound("Tecnico Not Found ID: "));
 
         StatusOrdemServicoEntity statusOrdemServicoEntity = statusOrdemServicoService.findById(1L); // recebe automatico
@@ -81,7 +81,7 @@ public class MapperObjectOsUpdate {
 
         for (ProdutoOrdemDto itemProdutos : ordemServicoDto.getProdutos()) {
 
-            Optional<ProdutoEntity> produto = produtoRepository.findById(itemProdutos.getProduto());
+            Optional<ProdutoEntity> produto = produtoRepository.findById(itemProdutos.getProduto_id());
             produto.orElseThrow(() -> new ModelNotFound("Produto Não Encontrado"));
 
             ProdutoOrdemEntity produtoExistente = this.encontraProdutoExistente(osBancoUpdate, produto.get());
@@ -109,7 +109,7 @@ public class MapperObjectOsUpdate {
     private void atualizaServicoOrdemServico(OrdemServicoDto ordemServicoDto, OrdemServicoEntity osBancoUpdate) {
 
         for (ServicoOrdemDto itemServicos : ordemServicoDto.getServicos()) {
-            Optional<ServicoEntity> servico = servicoRepository.findById(itemServicos.getServico());
+            Optional<ServicoEntity> servico = servicoRepository.findById(itemServicos.getServico_id());
             servico.orElseThrow(() -> new ModelNotFound("Produto Not Found ID:"));
 
             // Verifique se o servico já existe na lista

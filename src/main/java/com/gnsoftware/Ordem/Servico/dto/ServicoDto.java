@@ -21,8 +21,6 @@ public class ServicoDto {
 
     private double preco;
 
-    private List<OrdemServicoEntity> ordemServicoServicos = new ArrayList<>();
-
     public ServicoDto(ServicoEntity entity) {
         this.id = entity.getId();
         this.descricao = entity.getDescricao();

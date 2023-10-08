@@ -40,6 +40,8 @@ public class CargaClienteBD implements CommandLineRunner {
 
     @Autowired
     private CodigoNcmRepository ncmRepository;
+    @Autowired
+    private PagamentoRepository pagamentoRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -47,7 +49,6 @@ public class CargaClienteBD implements CommandLineRunner {
         CodigoNcm codigoNcm1 = new CodigoNcm(null,"84133020","Bomba injetora motor diesel");
         CodigoNcm codigoNcm2 = new CodigoNcm(null,"87089990","Borracha descarga/silencioso");
         ncmRepository.saveAll(Arrays.asList(codigoNcm1,codigoNcm2));
-
 
         TelefoneEntity telefone1 = new TelefoneEntity(null, "81", "8199458445");
         TelefoneEntity telefone2 = new TelefoneEntity(null, "85", "81344245");
@@ -96,5 +97,15 @@ public class CargaClienteBD implements CommandLineRunner {
         FornecedorEntity fornecedor = new FornecedorEntity(null, "Maraial TRANSPORTE", "MARAIAL", "PE", "13.897.686/0001-07");
 
         fornecedorRepository.save(fornecedor);
+
+        PagamentoEntity pagamento1 = new PagamentoEntity(null,"Dinheiro");
+        PagamentoEntity pagamento2 = new PagamentoEntity(null,"Cartão de crédito");
+        PagamentoEntity pagamento3 = new PagamentoEntity(null,"Cartão de débito");
+        PagamentoEntity pagamento4= new PagamentoEntity(null,"PIX");
+        PagamentoEntity pagamento5= new PagamentoEntity(null,"Cheque");
+        PagamentoEntity pagamento6= new PagamentoEntity(null,"A Prazo Da Loja");
+        pagamentoRepository.saveAll(Arrays.asList(pagamento1,pagamento2,pagamento3,pagamento4,pagamento5,pagamento6));
+
+
     }
 }
