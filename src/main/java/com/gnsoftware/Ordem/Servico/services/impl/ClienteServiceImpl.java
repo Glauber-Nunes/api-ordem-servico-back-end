@@ -1,18 +1,13 @@
 package com.gnsoftware.Ordem.Servico.services.impl;
 
 import com.gnsoftware.Ordem.Servico.dto.ClienteDto;
-import com.gnsoftware.Ordem.Servico.dto.OrdemServicoDto;
-import com.gnsoftware.Ordem.Servico.dto.TelefoneDto;
+
 import com.gnsoftware.Ordem.Servico.model.ClienteEntity;
 import com.gnsoftware.Ordem.Servico.model.EnderecoEntity;
-import com.gnsoftware.Ordem.Servico.model.OrdemServicoEntity;
+
 import com.gnsoftware.Ordem.Servico.model.TelefoneEntity;
-import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import com.gnsoftware.Ordem.Servico.repository.ClienteRepository;
-import com.gnsoftware.Ordem.Servico.repository.EnderecoRepository;
-import com.gnsoftware.Ordem.Servico.repository.TelefoneRepository;
 import com.gnsoftware.Ordem.Servico.services.ClienteService;
-import com.gnsoftware.Ordem.Servico.services.auxiliar.MapperObjectOsUpdate;
 import com.gnsoftware.Ordem.Servico.services.auxiliar.MapperObjectSaveCliente;
 import com.gnsoftware.Ordem.Servico.services.auxiliar.MapperObjectUpdateCliente;
 import com.gnsoftware.Ordem.Servico.services.exceptions.DataIntegrityViolationException;
@@ -29,13 +24,13 @@ import java.util.stream.Collectors;
 public class ClienteServiceImpl implements ClienteService {
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    ClienteRepository clienteRepository;
 
     @Autowired
-    private MapperObjectSaveCliente mapperObjectSaveCliente;
+    MapperObjectSaveCliente mapperObjectSaveCliente;
 
     @Autowired
-    private MapperObjectUpdateCliente mapperObjectUpdateCliente;
+    MapperObjectUpdateCliente mapperObjectUpdateCliente;
 
     @Override
     @Transactional
@@ -61,21 +56,21 @@ public class ClienteServiceImpl implements ClienteService {
         Optional<ClienteEntity> clienteBanco = clienteRepository.findById(id);
         clienteBanco.orElseThrow(() -> new ModelNotFound("Cliente Not Found"));
 
-        if (!clienteBanco.get().getCpf().equals(dto.getCpf())){
+        if (!clienteBanco.get().getCpf().equals(dto.getCpf())) {
             this.findByExistsCPF(dto); // verifica se o cpf ja esta cadastrado ao atualizar
         }
 
-        if (!clienteBanco.get().getEmail().equals(dto.getEmail())){
+        if (!clienteBanco.get().getEmail().equals(dto.getEmail())) {
             this.findByExistsEmail(dto);
         }
 
         mapperObjectUpdateCliente.mapperUpdate(clienteBanco.get(), dto);
 
-        if (!clienteBanco.get().getCpf().equals(dto.getCpf())){
+        if (!clienteBanco.get().getCpf().equals(dto.getCpf())) {
             this.findByExistsCPF(dto); // verifica se o cpf ja esta cadastrado ao atualizar
         }
 
-        if (!clienteBanco.get().getEmail().equals(dto.getEmail())){
+        if (!clienteBanco.get().getEmail().equals(dto.getEmail())) {
             this.findByExistsEmail(dto);
         }
 
@@ -96,9 +91,9 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public List<ClienteDto> findAll() {
-        List<ClienteEntity> entities = clienteRepository.findAll();
+        return clienteRepository.findAll().
+                stream().map(cliente -> new ClienteDto(cliente, cliente.getTelefone(), cliente.getEndereco())).collect(Collectors.toList());
 
-        return entities.stream().map(entity -> new ClienteDto(entity, entity.getTelefone(), entity.getEndereco())).collect(Collectors.toList());
     }
 
     @Override

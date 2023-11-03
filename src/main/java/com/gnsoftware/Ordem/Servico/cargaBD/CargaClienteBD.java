@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 import java.util.Arrays;
 
@@ -59,18 +59,18 @@ public class CargaClienteBD implements CommandLineRunner {
         usuario.setEmail("adm@gmail.com");
         usuario.setPerfils(Arrays.asList(Perfil.ROLE_ADM));
         usuario.setSenha(passwordEncoder.encode("adm2023"));
-
+        
         usuarioRepository.save(usuario);
 
-        // EnderecoEntity endereco = new EnderecoEntity(null, "rua", "102", "complemneto", "bairro", "cidade",
+       // EnderecoEntity endereco = new EnderecoEntity(null, "rua", "102", "complemneto", "bairro", "cidade");
         //    "estado", "55405-000", "Brasil");
         //    enderecoRepository.save(endereco);
         //  telefoneRepository.saveAll(Arrays.asList(telefone1, telefone2, telefone3));
 
-        //ClienteEntity clienteEntity = new ClienteEntity(null, "felipe", "155.695.074-85", "7878877", "felipe4@gmail.com", telefone1, endereco, Perfil.CLIENTE);
+        ClienteEntity clientePadrao = new ClienteEntity(null, "Gsistemas", "155.695.074-85", "7878877", "felipe4@gmail.com", telefone1, new EnderecoEntity(null,"rua 2","88","p","centro","mara","estado","888","brasil"),null);
         // ClienteEntity clienteEntity1 = new ClienteEntity(null, "joao", "262.966.600-06", "4545454", "joao@gmail.com", "rua 3", telefone2);
         // ClienteEntity clienteEntity2 = new ClienteEntity(null, "rafael", "319.386.750-02", "1545454", "rafael@gmail.com", "rua 4", telefone3);
-        //   clienteRepository.save(clienteEntity);
+        clienteRepository.save(clientePadrao);
 
 
         AtendenteEntity atendenteEntity = new AtendenteEntity(null, "Felipe", "415.933.010-06");

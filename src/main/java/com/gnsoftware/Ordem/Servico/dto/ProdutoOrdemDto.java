@@ -16,7 +16,7 @@ public class ProdutoOrdemDto {
 
     private Long ordemServico_id;
 
-    private Long produto_id;
+    private ProdutoDto produto;
 
     private Double quantidade;
     private Double preco;
@@ -24,7 +24,7 @@ public class ProdutoOrdemDto {
 
     public ProdutoOrdemDto(ProdutoOrdemEntity entity) {
         this.ordemServico_id = entity.getOsEntity().getId();
-        this.produto_id = entity.getProdutoEntity().getId_produto();
+        this.produto = new ProdutoDto(entity.getProdutoEntity());
         this.quantidade = entity.getQuantidade();
         this.preco = entity.getPreco();
         this.subTotalProduto = entity.subTotal();

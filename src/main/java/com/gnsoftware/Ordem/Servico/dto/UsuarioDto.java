@@ -19,6 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UsuarioDto {
+
     private Long id;
     @Size(min = 5, max = 20)
     private String nome;

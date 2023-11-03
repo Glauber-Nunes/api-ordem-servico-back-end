@@ -42,9 +42,12 @@ public class OrdemServicoEntity {
     @ManyToOne
     @JoinColumn(name = "tecnico_id")
     private TecnicoEntity tecnicoEntity;
+
+    @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm", locale = "pt-BR", timezone = "America/Sao_Paulo")
     private Date DataDoServico;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm", locale = "pt-BR", timezone = "America/Sao_Paulo")
     private Date DataFechamento;
 

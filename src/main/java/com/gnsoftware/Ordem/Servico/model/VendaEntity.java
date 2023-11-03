@@ -15,11 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
+
 public class VendaEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
     @JoinColumn(name = "cliente_id")
@@ -27,6 +25,7 @@ public class VendaEntity {
     @ManyToOne
     @JoinColumn(name = "atendente_id")
     private AtendenteEntity atendente;
+
 
     private List<ProdutoOrdemEntity> produtos = new ArrayList<>();
     @ManyToOne

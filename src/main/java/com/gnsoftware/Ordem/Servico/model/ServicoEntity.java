@@ -21,4 +21,6 @@ public class ServicoEntity {
     private Long id;
     private String descricao;
     private Double preco;
+
+
 }

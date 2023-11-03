@@ -24,26 +24,23 @@ import java.util.stream.Collectors;
 public class OSServiceImpl implements OSService {
 
     @Autowired
-    private OSRepository OSRepository;
+    OSRepository OSRepository;
 
     @Autowired
-    private StatusOrdemServicoService statusOrdemServicoService;
+    StatusOrdemServicoService statusOrdemServicoService;
 
     @Autowired
-    private EmailService emailService;
+    MapperObjectOsUpdate mapperObjectOs;
 
     @Autowired
-    private MapperObjectOsUpdate mapperObjectOs;
+    MapperObjectOsSave mapperObjectOsSave;
 
     @Autowired
-    private MapperObjectOsSave mapperObjectOsSave;
-
+    ProdutoRepository produtoRepository;
     @Autowired
-    private ProdutoRepository produtoRepository;
+    ProdutoOrdemRepository produtoOrdemRepository;
     @Autowired
-    private ProdutoOrdemRepository produtoOrdemRepository;
-    @Autowired
-    private ServicoRepository servicoRepository;
+    ServicoRepository servicoRepository;
     @Autowired
     ServicoOrdemRepository servicoOrdemRepository;
 

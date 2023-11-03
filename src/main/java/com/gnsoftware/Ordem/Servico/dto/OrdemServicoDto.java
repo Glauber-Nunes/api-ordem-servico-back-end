@@ -6,6 +6,9 @@ import com.gnsoftware.Ordem.Servico.model.compositekey.ProdutoOrdemEntity;
 import com.gnsoftware.Ordem.Servico.model.compositekey.ServicoOrdemEntity;
 import lombok.*;
 
+import javax.persistence.Column;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class OrdemServicoDto {
 
-    private long id;
+    private Long id;
 
     private AtendenteDto atendente;
 
@@ -29,9 +32,13 @@ public class OrdemServicoDto {
     private TecnicoDto tecnico;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm", locale = "pt-BR", timezone = "America/Sao_Paulo")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "data_do_servico")
     private Date dataDoServico;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm", locale = "pt-BR", timezone = "America/Sao_Paulo")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "data_fechamento")
     private Date dataFechamento;
 
     private List<ProdutoOrdemDto> produtos = new ArrayList<>();

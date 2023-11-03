@@ -20,7 +20,7 @@ import java.util.Optional;
 @Component
 public class MapperObjectOsSave {
     @Autowired
-    private com.gnsoftware.Ordem.Servico.repository.OSRepository OSRepository;
+    private OSRepository osRepository;
 
     @Autowired
     private StatusOrdemServicoService statusOrdemServicoService;
@@ -86,7 +86,7 @@ public class MapperObjectOsSave {
         //Este é um loop que itera sobre a lista de produtos associados à ordem de serviço
         for (ProdutoOrdemDto produtoOrdemDto : ordemServicoDto.getProdutos()) {
 
-            Optional<ProdutoEntity> produto = produtoRepository.findById(produtoOrdemDto.getProduto_id());
+            Optional<ProdutoEntity> produto = produtoRepository.findById(produtoOrdemDto.getProduto().getId());
             produto.orElseThrow(() -> new ModelNotFound("Produto Not Found ID:" ));
 
             System.out.println("Entrou na inclusão do item do serviço");
@@ -102,7 +102,7 @@ public class MapperObjectOsSave {
 
         for (ServicoOrdemDto itemServico : ordemServicoDto.getServicos()) {
 
-            Optional<ServicoEntity> servico = servicoRepository.findById(itemServico.getServico_id());
+            Optional<ServicoEntity> servico = servicoRepository.findById(itemServico.getServico().getId());
             servico.orElseThrow(() -> new ModelNotFound("Serviço Not Found ID:"));
 
             ServicoOrdemEntity servicoOrdemEntity = new ServicoOrdemEntity(ordemServicoEntity, servico.get(), itemServico.getQuantidade(), servico.get().getPreco());
@@ -112,7 +112,7 @@ public class MapperObjectOsSave {
 
     private void calculaValorTotalSalvaOrdemServico(OrdemServicoEntity ordemServicoEntity, OrdemServicoDto ordemServicoDto) {
         ordemServicoEntity.setValorTotalOrdem(ordemServicoEntity.totalOs());
-        OSRepository.save(ordemServicoEntity);
+        osRepository.save(ordemServicoEntity);
         //emailService.enviarEmailOSAberta(osEntity.getClienteEntity(), osDto); //envia email para o clienteEntity
     }
 

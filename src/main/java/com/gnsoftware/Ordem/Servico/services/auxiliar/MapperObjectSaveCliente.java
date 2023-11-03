@@ -4,14 +4,11 @@ import com.gnsoftware.Ordem.Servico.dto.ClienteDto;
 import com.gnsoftware.Ordem.Servico.model.ClienteEntity;
 import com.gnsoftware.Ordem.Servico.model.EnderecoEntity;
 import com.gnsoftware.Ordem.Servico.model.TelefoneEntity;
-import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import com.gnsoftware.Ordem.Servico.repository.ClienteRepository;
 import com.gnsoftware.Ordem.Servico.repository.EnderecoRepository;
 import com.gnsoftware.Ordem.Servico.repository.TelefoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.time.Instant;
 import java.util.Date;
 
 @Component

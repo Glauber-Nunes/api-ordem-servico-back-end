@@ -27,6 +27,12 @@ public class AtendenteController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADM')")
+    @GetMapping("/replica/{id}")
+    public ResponseEntity<AtendenteDto> replica(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(atendenteService.replica(id));
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @PutMapping("/{id}")
     public ResponseEntity<AtendenteDto> update(@Valid @PathVariable Long id, @RequestBody AtendenteDto dto) {
         return ResponseEntity.ok().body(atendenteService.update(id, dto));

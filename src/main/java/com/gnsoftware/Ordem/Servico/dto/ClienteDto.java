@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gnsoftware.Ordem.Servico.model.ClienteEntity;
 import com.gnsoftware.Ordem.Servico.model.EnderecoEntity;
 import com.gnsoftware.Ordem.Servico.model.TelefoneEntity;
-import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+
 
 @Data
 @NoArgsConstructor
@@ -29,8 +29,11 @@ public class ClienteDto {
     private String email;
     private TelefoneDto telefone;
     private EnderecoDto endereco;
+
+    @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm", locale = "pt-BR", timezone = "America/Sao_Paulo")
     private Date dataCadastro;
+
 
     public ClienteDto(ClienteEntity entity, TelefoneEntity telefone, EnderecoEntity endereco) {
         this.id = entity.getId();

@@ -1,6 +1,7 @@
 package com.gnsoftware.Ordem.Servico.repository;
 
 import com.gnsoftware.Ordem.Servico.model.UsuarioEntity;
+import com.gnsoftware.Ordem.Servico.security.UserSpringSecurity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

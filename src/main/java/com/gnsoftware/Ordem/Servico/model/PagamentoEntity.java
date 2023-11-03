@@ -19,5 +19,4 @@ public class PagamentoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String descricao;
-    private Double quantia;
 }

@@ -1,16 +1,17 @@
 package com.gnsoftware.Ordem.Servico.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Builder
@@ -36,8 +37,10 @@ public class ClienteEntity implements Serializable {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "endereco_id")
     private EnderecoEntity endereco;
+
+    @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm", locale = "pt-BR", timezone = "America/Sao_Paulo")
     private Date dataCadastro;
 
-    //public List<Venda> vendas = new ArrayList<>();
+
 }

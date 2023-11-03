@@ -3,7 +3,6 @@ package com.gnsoftware.Ordem.Servico.services.impl;
 import com.gnsoftware.Ordem.Servico.dto.OrdemServicoDto;
 import com.gnsoftware.Ordem.Servico.model.ClienteEntity;
 import com.gnsoftware.Ordem.Servico.model.OrdemServicoEntity;
-import com.gnsoftware.Ordem.Servico.model.UsuarioEntity;
 import com.gnsoftware.Ordem.Servico.services.EmailService;
 import freemarker.template.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +27,6 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private Configuration configuration;
 
-    @Override
-    public void enviarEmailBoasVindasUsuario(UsuarioEntity entity) {
-
-    }
 
     @Override
     public void enviarEmailOSAberta(ClienteEntity clienteEntity, OrdemServicoDto ordemServicoDto) {

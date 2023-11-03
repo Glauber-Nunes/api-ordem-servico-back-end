@@ -1,7 +1,9 @@
 package com.gnsoftware.Ordem.Servico.services.impl;
 
 import com.gnsoftware.Ordem.Servico.dto.AtendenteDto;
+import com.gnsoftware.Ordem.Servico.dto.ClienteDto;
 import com.gnsoftware.Ordem.Servico.model.AtendenteEntity;
+import com.gnsoftware.Ordem.Servico.model.ClienteEntity;
 import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import com.gnsoftware.Ordem.Servico.repository.AtendenteRepository;
 import com.gnsoftware.Ordem.Servico.services.AtendenteService;
@@ -32,6 +34,20 @@ public class AtendenteServiceImpl implements AtendenteService {
         return new AtendenteDto(entity);
     }
 
+    @Override
+    public AtendenteDto replica(Long id){
+
+        Optional<AtendenteEntity> atendente = atendenteRepository.findById(id);
+        atendente.orElseThrow(() -> new ModelNotFound("Atendente Not Found"));
+
+        AtendenteEntity atendenteReplica = new AtendenteEntity();
+        atendenteReplica.setId(null);
+        atendenteReplica.setNome(atendente.get().getNome());
+        atendenteReplica.setCpf(atendente.get().getCpf());
+
+
+        return new AtendenteDto(atendenteReplica);
+    }
 
     @Override
     public AtendenteDto update(Long id, AtendenteDto dto) {
