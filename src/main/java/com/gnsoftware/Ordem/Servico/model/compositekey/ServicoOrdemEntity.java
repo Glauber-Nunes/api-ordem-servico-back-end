@@ -15,11 +15,11 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
+//@Entity
 @Table(name = "os_servico")
 public class ServicoOrdemEntity {
 
-    @EmbeddedId
+    //@EmbeddedId
     private ServicoOrdemPK id = new ServicoOrdemPK();
 
     private Double quantidade;

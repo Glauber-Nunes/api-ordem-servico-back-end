@@ -1,6 +1,6 @@
 package com.gnsoftware.Ordem.Servico.services.impl;
 
-import com.gnsoftware.Ordem.Servico.dto.OrdemServicoDto;
+
 import com.gnsoftware.Ordem.Servico.model.ClienteEntity;
 import com.gnsoftware.Ordem.Servico.model.OrdemServicoEntity;
 import com.gnsoftware.Ordem.Servico.services.EmailService;
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
@@ -21,22 +22,23 @@ import java.util.Map;
 public class EmailServiceImpl implements EmailService {
 
     @Autowired
-    private JavaMailSender javaMailSender;
+    JavaMailSender javaMailSender;
     @Value("${spring.mail.username}")
-    private String remetenteproperties;
+    String remetenteproperties;
     @Autowired
     private Configuration configuration;
 
 
+
     @Override
-    public void enviarEmailOSAberta(ClienteEntity clienteEntity, OrdemServicoDto ordemServicoDto) {
+    public void enviarEmailOSAberta(ClienteEntity clienteEntity, OrdemServicoEntity ordemServico) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         Map<String, Object> propriedades = new HashMap<>();
         propriedades.put("nome", clienteEntity.getNome()); // remetente
         propriedades.put("mensagem1", " SEU SERVIÇO FOI ABERTO COM SUCESSO, EM BREVE VOÇE RECEBERA UM EMAIL QUANDO SEU SERVIÇO FOR CONCLUIDO :)");
-        propriedades.put("mensagem2", " Descrição Do Serviço: " + ordemServicoDto.getDescricao());
-        propriedades.put("mensagem3", " Valor Total: " + ordemServicoDto.getValorTotalOrdem());
+        propriedades.put("mensagem2", "Importante: Anote o número de protocolo para referência futura. Este número é essencial para acompanhar o status do seu serviço. Seu Protocolo é: " + ordemServico.getProtocolo());
+        propriedades.put("mensagem3", " Valor Total: " + ordemServico.getValorTotalOrdem());
 
         try {
 
@@ -61,8 +63,8 @@ public class EmailServiceImpl implements EmailService {
 
         Map<String, Object> propriedades = new HashMap<>();
         propriedades.put("nome", ordemServicoEntity.getClienteEntity().getNome());
-        propriedades.put("mensagem1", " Seu Serviço Foi finalizado Com Sucesso");
-        propriedades.put("mensagem2", "");
+        propriedades.put("mensagem1", "Gostaríamos de informar que o serviço solicitado foi concluído com sucesso. O número de protocolo associado a este encerramento é " + ordemServicoEntity.getProtocolo());
+        propriedades.put("mensagem2", "Data de Término: " + ordemServicoEntity.getDataFechamento() + "Agradecemos pela confiança depositada em nossos serviços. Em caso de dúvidas adicionais ou necessidade de suporte futuro, não hesite em entrar em contato.");
         propriedades.put("mensagem3", " VOLTE SEMPRE");
 
         try {

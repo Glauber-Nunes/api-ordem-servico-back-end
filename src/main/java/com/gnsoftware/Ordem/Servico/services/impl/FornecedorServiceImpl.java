@@ -2,7 +2,9 @@ package com.gnsoftware.Ordem.Servico.services.impl;
 
 import com.gnsoftware.Ordem.Servico.dto.FornecedorDto;
 import com.gnsoftware.Ordem.Servico.model.FornecedorEntity;
+import com.gnsoftware.Ordem.Servico.model.UfEntity;
 import com.gnsoftware.Ordem.Servico.repository.FornecedorRepository;
+import com.gnsoftware.Ordem.Servico.repository.UfRepository;
 import com.gnsoftware.Ordem.Servico.services.FornecedorService;
 import com.gnsoftware.Ordem.Servico.services.exceptions.DataIntegrityViolationException;
 import com.gnsoftware.Ordem.Servico.services.exceptions.ModelNotFound;
@@ -18,6 +20,8 @@ public class FornecedorServiceImpl implements FornecedorService {
 
     @Autowired
     FornecedorRepository fornecedorRepository;
+    @Autowired
+    UfRepository ufRepository;
 
     @Override
     public FornecedorDto save(FornecedorDto dto) {
@@ -69,8 +73,11 @@ public class FornecedorServiceImpl implements FornecedorService {
 
         entity.setNome(dto.getNome());
         entity.setMunicipio(dto.getMunicipio());
-        entity.setUf(dto.getUf());
         entity.setCnpj(dto.getCnpj());
+
+        Optional<UfEntity> ufEntity = ufRepository.findById(dto.getUf().getId());
+        ufEntity.orElseThrow(() -> new ModelNotFound("UF NOT FOUND"));
+        entity.setUfEntity(ufEntity.get());
 
         fornecedorRepository.save(entity);
 

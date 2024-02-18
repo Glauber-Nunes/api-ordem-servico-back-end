@@ -24,9 +24,11 @@ public class MapperObjectSaveCliente {
     public void mapperSave(ClienteEntity clienteEntity, ClienteDto clienteDto, TelefoneEntity telefone
             , EnderecoEntity endereco) {
 
+        //setando telefone
         telefone.setDd(clienteDto.getTelefone().getDd());
         telefone.setNumero(clienteDto.getTelefone().getNumero());
 
+        //setando endereço
         endereco.setRua(clienteDto.getEndereco().getRua());
         endereco.setNumero(clienteDto.getEndereco().getNumero());
         endereco.setComplemento(clienteDto.getEndereco().getComplemento());
@@ -37,6 +39,7 @@ public class MapperObjectSaveCliente {
         endereco.setCep(clienteDto.getEndereco().getCep());
         endereco.setPais(clienteDto.getEndereco().getPais());
 
+        //setando dados do cliente
         clienteEntity.setNome(clienteDto.getNome());
         clienteEntity.setCpf(clienteDto.getCpf());
         clienteEntity.setRg(clienteDto.getRg());

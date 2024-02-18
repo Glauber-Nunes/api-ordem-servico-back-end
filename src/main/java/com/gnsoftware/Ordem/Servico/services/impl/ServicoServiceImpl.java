@@ -70,6 +70,7 @@ public class ServicoServiceImpl implements ServicoService {
     }
 
     private ServicoDto mapperObject(ServicoDto dto, ServicoEntity entity) {
+
         entity.setDescricao(dto.getDescricao());
         entity.setPreco(dto.getPreco());
 

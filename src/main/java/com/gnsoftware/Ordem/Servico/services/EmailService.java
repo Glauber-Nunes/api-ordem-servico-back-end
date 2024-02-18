@@ -6,7 +6,7 @@ import com.gnsoftware.Ordem.Servico.model.OrdemServicoEntity;
 
 public interface EmailService {
 
-    void enviarEmailOSAberta(ClienteEntity clienteEntity, OrdemServicoDto ordemServicoDto);
+    void enviarEmailOSAberta(ClienteEntity clienteEntity, OrdemServicoEntity ordemServico);
 
     void enviarEmailServicoFinalizado(OrdemServicoEntity ordemServicoEntity);
 }

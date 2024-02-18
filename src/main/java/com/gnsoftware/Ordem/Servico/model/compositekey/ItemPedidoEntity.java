@@ -12,14 +12,14 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
+//@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "pedido_produto")
 @Getter
 @Setter
 public class ItemPedidoEntity implements Serializable {
-    @EmbeddedId
+   // @EmbeddedId
     private ItemPedidoPK id = new ItemPedidoPK();
 
     private Double quantidade;

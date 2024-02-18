@@ -4,4 +4,6 @@ import com.gnsoftware.Ordem.Servico.dto.UsuarioDto;
 
 public interface UsuarioService {
     UsuarioDto save(UsuarioDto usuarioDto);
+
+    UsuarioDto findById(Long id);
 }

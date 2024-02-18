@@ -22,5 +22,7 @@ public class ServicoEntity {
     private String descricao;
     private Double preco;
 
-
+    public Double subTotal() {
+        return this.preco;
+    }
 }

@@ -5,9 +5,9 @@ import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Builder
 @NoArgsConstructor
 @Getter
 @Setter
@@ -22,6 +22,9 @@ public class AtendenteEntity {
     private String nome;
     @CPF
     private String cpf;
+
+    @OneToMany(mappedBy = "atendenteEntity")
+    private List<OrdemServicoEntity> ordemServicos;
 
     public AtendenteEntity(Long id, String nome, String cpf) {
         this.id = id;

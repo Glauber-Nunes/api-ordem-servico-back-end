@@ -91,6 +91,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public List<ClienteDto> findAll() {
+
         return clienteRepository.findAll().
                 stream().map(cliente -> new ClienteDto(cliente, cliente.getTelefone(), cliente.getEndereco())).collect(Collectors.toList());
 

@@ -5,13 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.validation.constraints.NotBlank;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ProdutoDto {
 
     private Long id;
@@ -23,7 +21,7 @@ public class ProdutoDto {
     private String unEntrada;
     private String unSaida;
     private Double estoque;
-    private CodigoNcmDto codigoNcmDto;
+    private String codigoNcm;
 
     public ProdutoDto(ProdutoEntity produtoEntity) {
         this.id = produtoEntity.getId_produto();
@@ -33,6 +31,6 @@ public class ProdutoDto {
         this.unEntrada = produtoEntity.getUnEntrada();
         this.unSaida = produtoEntity.getUnSaida();
         this.estoque = produtoEntity.getEstoque();
-        this.codigoNcmDto = new CodigoNcmDto(produtoEntity.getCodigoNcm());
+        this.codigoNcm = produtoEntity.getCodigoNcm();
     }
 }

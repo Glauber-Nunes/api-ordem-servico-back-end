@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Table(name = "produto")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ProdutoEntity  {
@@ -26,7 +25,9 @@ public class ProdutoEntity  {
     private String unSaida;
     private Double estoque;
 
-    @ManyToOne
-    @JoinColumn(name = "codNcm_id")
-    private CodigoNcm codigoNcm;
+    private String codigoNcm;
+
+    public Double subTotal() {
+        return this.preco;
+    }
 }

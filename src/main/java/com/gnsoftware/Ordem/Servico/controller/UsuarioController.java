@@ -22,4 +22,10 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDto> save(@RequestBody UsuarioDto usuarioDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.save(usuarioDto));
     }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADM')")
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioDto>findById(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(usuarioService.findById(id));
+    }
 }

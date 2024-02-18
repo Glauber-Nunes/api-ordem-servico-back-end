@@ -29,8 +29,8 @@ public class OSController {
     @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @PostMapping
     public ResponseEntity<OrdemServicoDto> save(@RequestBody OrdemServicoDto OrdemServicoDto) {
-            System.out.println("Recebendo Ordem de Serviço no servidor: " + OrdemServicoDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(OSService.save(OrdemServicoDto));
+        System.out.println("Recebendo Ordem de Serviço no servidor: " + OrdemServicoDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(OSService.save(OrdemServicoDto));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADM')")
@@ -47,9 +47,14 @@ public class OSController {
 
     @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @PutMapping("/finalizar-servico/{id_os}")
-    public ResponseEntity<OrdemServicoEntity> finalizaOs(@PathVariable Long id_os, @RequestBody OrdemServicoEntity ordemServico) {
+    public ResponseEntity<String> finalizaOs(@PathVariable Long id_os, @RequestBody OrdemServicoEntity ordemServico) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(OSService.finalizaOs(id_os,ordemServico));
+        OSService.finalizaOs(id_os, ordemServico);
+        JSONObject response = new JSONObject();
+        response.put("message", "FINALIZDO COM SUCESSO");
+        return ResponseEntity.status(HttpStatus.OK).body(response.toString());
+
+
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADM')")
@@ -63,17 +68,4 @@ public class OSController {
         return ResponseEntity.status(HttpStatus.OK).body(response.toString());
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADM')")
-    @DeleteMapping("/{id}/remove-produto/{id_produto}")
-    public ResponseEntity<OrdemServicoDto> removeProdutoDaOrdemDeServico(@PathVariable Long id, @PathVariable Long id_produto) {
-        OSService.removeProdutoDaOrdemDeServico(id, id_produto);
-
-        return ResponseEntity.status(HttpStatus.OK).body(OSService.removeProdutoDaOrdemDeServico(id, id_produto));
-    }
-
-    @PreAuthorize("hasAnyRole('ROLE_ADM')")
-    @DeleteMapping("{id}/remove-servico/{id_servico}")
-    public ResponseEntity<OrdemServicoDto> removeServicoDaOrdemDeServico(@PathVariable Long id, @PathVariable Long id_servico) {
-        return ResponseEntity.status(HttpStatus.OK).body(OSService.removeServicoDaOrdemDeServico(id, id_servico));
-    }
 }

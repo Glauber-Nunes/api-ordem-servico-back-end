@@ -1,7 +1,6 @@
 package com.gnsoftware.Ordem.Servico.dto;
 
 import com.gnsoftware.Ordem.Servico.model.AtendenteEntity;
-import com.gnsoftware.Ordem.Servico.model.enums.Perfil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,8 +23,14 @@ public class AtendenteDto {
     private String cpf;
 
     public AtendenteDto(AtendenteEntity entity) {
-        this.id = entity.getId();
-        this.nome = entity.getNome();
-        this.cpf = entity.getCpf();
+
+        if (entity != null) {
+            this.id = entity.getId();
+            this.nome = entity.getNome();
+            this.cpf = entity.getCpf();
+        }else {
+            System.out.print("SEJA O QUE DEUS QUISER , SE FOR DA VONTADE DELE TUDO IRÁ DA CERTO, AMÉM");
+        }
+
     }
 }

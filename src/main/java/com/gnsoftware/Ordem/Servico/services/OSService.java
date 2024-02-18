@@ -19,8 +19,4 @@ public interface OSService {
 
     OrdemServicoEntity finalizaOs(Long id_os,OrdemServicoEntity ordemServico);
 
-    OrdemServicoDto removeProdutoDaOrdemDeServico(Long id, Long id_produto);
-
-    OrdemServicoDto removeServicoDaOrdemDeServico(Long id, Long id_servico);
-
 }

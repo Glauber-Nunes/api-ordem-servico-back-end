@@ -33,7 +33,7 @@ public class UsuarioDto {
         this.id = entity.getId();
         this.nome = entity.getNome();
         this.email = entity.getEmail();
-        //this.senha = entity.getSenha();
+        this.senha = entity.getSenha();
 
     }
 

@@ -19,26 +19,31 @@ public class TecnicoController {
 
     @Autowired
     private TecnicoService tecnicoService;
+
     @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @PostMapping
     public ResponseEntity<TecnicoDto> save(@Valid @RequestBody TecnicoDto tecnicoDto) {
         return ResponseEntity.status(HttpStatus.OK).body(tecnicoService.save(tecnicoDto));
     }
+
     @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @PutMapping("/{id}")
     public ResponseEntity<TecnicoDto> update(@PathVariable Long id, @RequestBody TecnicoDto tecnicoDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(tecnicoService.update(id, tecnicoDto));
     }
+
     @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @GetMapping("/{id}")
     public ResponseEntity<TecnicoDto> findById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(tecnicoService.findById(id));
     }
+
     @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @GetMapping
     public ResponseEntity<List<TecnicoDto>> findAll() {
         return ResponseEntity.status(HttpStatus.OK).body(tecnicoService.findAll());
     }
+
     @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {

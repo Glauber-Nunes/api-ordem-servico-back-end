@@ -11,11 +11,11 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
+//@Entity
 @Table(name = "os_produto")
 public class ProdutoOrdemEntity {
 
-    @EmbeddedId
+    //@EmbeddedId
     private ProdutoOrdemPK id = new ProdutoOrdemPK();
 
     private Double quantidade;

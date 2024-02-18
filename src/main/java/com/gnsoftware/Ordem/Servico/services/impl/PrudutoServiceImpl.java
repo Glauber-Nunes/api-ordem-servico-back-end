@@ -1,9 +1,7 @@
 package com.gnsoftware.Ordem.Servico.services.impl;
 
 import com.gnsoftware.Ordem.Servico.dto.ProdutoDto;
-import com.gnsoftware.Ordem.Servico.model.CodigoNcm;
 import com.gnsoftware.Ordem.Servico.model.ProdutoEntity;
-import com.gnsoftware.Ordem.Servico.repository.CodigoNcmRepository;
 import com.gnsoftware.Ordem.Servico.repository.ProdutoRepository;
 import com.gnsoftware.Ordem.Servico.services.ProdutoService;
 import com.gnsoftware.Ordem.Servico.services.exceptions.ModelNotFound;
@@ -21,8 +19,6 @@ public class PrudutoServiceImpl implements ProdutoService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
-    @Autowired
-    private CodigoNcmRepository codigoNcmRepository;
 
     @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @Override
@@ -82,11 +78,7 @@ public class PrudutoServiceImpl implements ProdutoService {
         entity.setUnEntrada(dto.getUnEntrada());
         entity.setUnSaida(dto.getUnSaida());
         entity.setEstoque(dto.getEstoque());
-
-        Optional<CodigoNcm> codigoNcm = codigoNcmRepository.findById(dto.getCodigoNcmDto().getId());
-        codigoNcm.orElseThrow(() -> new ModelNotFound("Codigo NCM Não Encontrado na sua base, Verifique Sua Base"));
-
-        entity.setCodigoNcm(codigoNcm.get());
+        entity.setCodigoNcm(dto.getCodigoNcm());
 
         produtoRepository.save(entity);
         return new ProdutoDto(entity);

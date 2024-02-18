@@ -22,15 +22,20 @@ public class FornecedorDto {
     @NotBlank(message = "NOME REQUERIDO")
     private String nome;
     private String municipio;
-    private String uf;
     @CNPJ
     private String cnpj;
 
+    private UfDto uf;
+
     public FornecedorDto(FornecedorEntity entity) {
-        this.id = entity.getId();
-        this.nome = entity.getNome();
-        this.municipio = entity.getMunicipio();
-        this.uf = entity.getUf();
-        this.cnpj = entity.getCnpj();
+
+        if (entity != null) {
+            this.id = entity.getId();
+            this.nome = entity.getNome();
+            this.municipio = entity.getMunicipio();
+            this.cnpj = entity.getCnpj();
+            this.uf = new UfDto(entity.getUfEntity());
+        }
+
     }
 }

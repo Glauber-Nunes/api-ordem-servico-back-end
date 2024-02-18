@@ -22,7 +22,10 @@ public class FornecedorEntity {
 
     private String nome;
     private String municipio;
-    private String uf;
     @CNPJ
     private String cnpj;
+
+    @ManyToOne
+    @JoinColumn(name = "UF_id")
+    private UfEntity ufEntity;
 }
