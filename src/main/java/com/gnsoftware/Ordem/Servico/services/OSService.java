@@ -19,4 +19,5 @@ public interface OSService {
 
     OrdemServicoEntity finalizaOs(Long id_os,OrdemServicoEntity ordemServico);
 
+    Long countOrdemServico();
 }

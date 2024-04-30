@@ -8,7 +8,10 @@ import com.gnsoftware.Ordem.Servico.services.exceptions.ModelNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,23 +26,23 @@ public class PrudutoServiceImpl implements ProdutoService {
     @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @Override
     @Transactional
-    public ProdutoDto save(ProdutoDto dto) {
+    public ProdutoDto save(ProdutoDto dto,MultipartFile imagem) {
 
         ProdutoEntity entity = new ProdutoEntity();
 
-        return this.mapperObject(dto, entity);
+        return this.mapperObject(dto, entity,imagem);
 
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @Override
     @Transactional
-    public ProdutoDto update(Long id, ProdutoDto dto) {
+    public ProdutoDto update(Long id, ProdutoDto dto,MultipartFile imagem) {
 
         Optional<ProdutoEntity> entityBanco = produtoRepository.findById(id);
         entityBanco.orElseThrow(() -> new ModelNotFound("Produto Not Found ID:" + id));
 
-        return this.mapperObject(dto, entityBanco.get());
+        return this.mapperObject(dto, entityBanco.get(),imagem);
     }
     @PreAuthorize("hasAnyRole('ROLE_ADM')")
     @Override
@@ -70,7 +73,12 @@ public class PrudutoServiceImpl implements ProdutoService {
 
     }
 
-    private ProdutoDto mapperObject(ProdutoDto dto, ProdutoEntity entity) {
+    @Override
+    public Long countProduto(){
+        return produtoRepository.countProduto();
+    }
+
+    private ProdutoDto mapperObject(ProdutoDto dto, ProdutoEntity entity, MultipartFile imagem) {
 
         entity.setDescricao(dto.getDescricao());
         entity.setPreco(dto.getPreco());
@@ -79,6 +87,8 @@ public class PrudutoServiceImpl implements ProdutoService {
         entity.setUnSaida(dto.getUnSaida());
         entity.setEstoque(dto.getEstoque());
         entity.setCodigoNcm(dto.getCodigoNcm());
+
+
 
         produtoRepository.save(entity);
         return new ProdutoDto(entity);

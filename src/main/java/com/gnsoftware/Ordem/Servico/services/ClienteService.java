@@ -19,4 +19,6 @@ public interface ClienteService {
 
     void delete(Long id);
 
+    Long countCliente();
+
 }

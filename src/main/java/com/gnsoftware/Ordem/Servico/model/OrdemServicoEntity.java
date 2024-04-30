@@ -80,10 +80,6 @@ public class OrdemServicoEntity {
 
     private String protocolo;
 
-    public Double totalOs() {
-        return subTotalProduto() + subTotalServico();
-    }
-
     public Double subTotalProduto(){
         this.SubTotalProduto = 0.0;
 
@@ -105,5 +101,8 @@ public class OrdemServicoEntity {
         return SubTotalServico;
     }
 
+    public Double totalOs() {
+        return subTotalProduto() + subTotalServico();
+    }
 
 }

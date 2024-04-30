@@ -22,6 +22,7 @@ public class ProdutoDto {
     private String unSaida;
     private Double estoque;
     private String codigoNcm;
+    private byte[] imagem;
 
     public ProdutoDto(ProdutoEntity produtoEntity) {
         this.id = produtoEntity.getId_produto();
@@ -32,5 +33,6 @@ public class ProdutoDto {
         this.unSaida = produtoEntity.getUnSaida();
         this.estoque = produtoEntity.getEstoque();
         this.codigoNcm = produtoEntity.getCodigoNcm();
+        //this.imagem = produtoEntity.getImagem();
     }
 }

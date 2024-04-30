@@ -18,4 +18,7 @@ public interface ClienteRepository extends JpaRepository<ClienteEntity, Long> {
 
     boolean existsByemail(String email);
 
+    @Query("SELECT COUNT(c) FROM ClienteEntity c")
+    Long countCliente();
+
 }

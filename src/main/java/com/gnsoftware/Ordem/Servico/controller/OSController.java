@@ -68,4 +68,10 @@ public class OSController {
         return ResponseEntity.status(HttpStatus.OK).body(response.toString());
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADM')")
+    @GetMapping("/count")
+    public ResponseEntity<Long> countOrdemServico(){
+        return ResponseEntity.status(HttpStatus.OK).body(OSService.countOrdemServico());
+    }
+
 }

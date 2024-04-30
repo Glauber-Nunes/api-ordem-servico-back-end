@@ -51,4 +51,10 @@ public class ClienteController {
         clienteService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Cliente Deletado!");
     }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADM')")
+    @GetMapping("/count")
+    public ResponseEntity<Long> countCliente(){
+        return ResponseEntity.status(HttpStatus.OK).body(clienteService.countCliente());
+    }
 }

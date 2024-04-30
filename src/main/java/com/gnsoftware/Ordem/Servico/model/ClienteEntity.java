@@ -25,9 +25,11 @@ public class ClienteEntity implements Serializable {
     private String rg;
     @Email(message = "Email Incorreto")
     private String email;
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "telefone_id")
     private TelefoneEntity telefone;
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "endereco_id")
     private EnderecoEntity endereco;

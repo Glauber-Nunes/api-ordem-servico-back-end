@@ -44,7 +44,7 @@ public class MapperObjectOsSave {
         this.salvaCabecalhoOrdemServico(ordemServicoDto, ordemServicoEntity);
         this.salvaServicoOrdemServico(ordemServicoDto, ordemServicoEntity);
         this.salvaProdutoOrdemServico(ordemServicoDto, ordemServicoEntity);
-        this.calculaValorTotalSalvaOrdemServico(ordemServicoEntity, ordemServicoDto);
+        this.calculaValorTotalSalvaOrdemServico(ordemServicoEntity);
         emailService.enviarEmailOSAberta(ordemServicoEntity.getClienteEntity(), ordemServicoEntity); //envia email para o clienteEntity
     }
 
@@ -102,7 +102,7 @@ public class MapperObjectOsSave {
         }
     }
 
-    private void calculaValorTotalSalvaOrdemServico(OrdemServicoEntity ordemServicoEntity, OrdemServicoDto ordemServicoDto) {
+    private void calculaValorTotalSalvaOrdemServico(OrdemServicoEntity ordemServicoEntity) {
         ordemServicoEntity.setValorTotalOrdem(ordemServicoEntity.totalOs());
         osRepository.save(ordemServicoEntity);
 

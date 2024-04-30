@@ -27,6 +27,9 @@ public class ProdutoEntity  {
 
     private String codigoNcm;
 
+   // @Lob // Indica que este atributo será armazenado como um grande objeto no banco de dados
+    //private byte[] imagem; // Atributo para armazenar a imagem do produto
+
     public Double subTotal() {
         return this.preco;
     }

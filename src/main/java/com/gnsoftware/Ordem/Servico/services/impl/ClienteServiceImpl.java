@@ -107,6 +107,11 @@ public class ClienteServiceImpl implements ClienteService {
         }
     }
 
+    @Override
+    public Long countCliente(){
+        return clienteRepository.countCliente();
+    }
+
 
     private void findByExistsCPF(ClienteDto clienteDto) {
         if (clienteRepository.existsByCpf(clienteDto.getCpf())) {

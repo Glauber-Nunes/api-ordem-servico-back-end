@@ -38,6 +38,7 @@ public class CargaClienteBD implements CommandLineRunner {
 
     @Autowired
     UfRepository ufRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -122,13 +123,6 @@ public class CargaClienteBD implements CommandLineRunner {
 
         fornecedorRepository.save(fornecedor);
 
-        PagamentoEntity pagamento1 = new PagamentoEntity(null, "Dinheiro");
-        PagamentoEntity pagamento2 = new PagamentoEntity(null, "Cartão de crédito");
-        PagamentoEntity pagamento3 = new PagamentoEntity(null, "Cartão de débito");
-        PagamentoEntity pagamento4 = new PagamentoEntity(null, "PIX");
-        PagamentoEntity pagamento5 = new PagamentoEntity(null, "Cheque");
-        PagamentoEntity pagamento6 = new PagamentoEntity(null, "A Prazo Da Loja");
-        //pagamentoRepository.saveAll(Arrays.asList(pagamento1, pagamento2, pagamento3, pagamento4, pagamento5, pagamento6));
 
     }
 }

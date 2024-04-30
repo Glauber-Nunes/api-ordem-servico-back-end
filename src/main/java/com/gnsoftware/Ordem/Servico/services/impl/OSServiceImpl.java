@@ -113,52 +113,9 @@ public class OSServiceImpl implements OSService {
         return osEntityBanco.get();
     }
 
-
-    @Transactional
-    public OrdemServicoDto removeProdutoDaOrdemDeServico(Long id, Long id_produto) {
-
-        Optional<OrdemServicoEntity> ordemServico = OSRepository.findById(id);
-        ordemServico.orElseThrow(() -> new ModelNotFound("Ordem De Serviço Not Found"));
-
-        Optional<ProdutoEntity> produto = produtoRepository.findById(id_produto);
-        produto.orElseThrow(() -> new ModelNotFound("Produto Not Found"));
-
-        for (ProdutoEntity produtoEntity : ordemServico.get().getProdutos()) {
-
-            if (produtoEntity.equals(produto.get())) {
-                ordemServico.get().getProdutos().remove(produtoEntity);
-                produtoRepository.delete(produtoEntity); // exclui relacionamneto do produto
-                break;
-            }
-        }
-        // Salva a ordem de serviço atualizada no banco de dados
-        ordemServico.get().setValorTotalOrdem(ordemServico.get().totalOs());
-        OSRepository.save(ordemServico.get());
-
-        return new OrdemServicoDto(ordemServico.get(), ordemServico.get().getServicos(), ordemServico.get().getProdutos());
-    }
-
-    @Transactional
-    public OrdemServicoDto removeServicoDaOrdemDeServico(Long id, Long id_servico) {
-
-        Optional<OrdemServicoEntity> ordemServico = OSRepository.findById(id);
-        ordemServico.orElseThrow(() -> new ModelNotFound("OS Not Found"));
-
-        Optional<ServicoEntity> servico = servicoRepository.findById(id_servico);
-        servico.orElseThrow(() -> new ModelNotFound("Serviço Not Found"));
-
-        // percorre a ordem de serviço que veio do banco pesquisada
-        for (ServicoEntity itemServico : ordemServico.get().getServicos()) {
-            //condiçao para verificar se o serviço q esta na minha lista é igual ao serviço que a gente pesquisou
-            if (itemServico.equals(servico.get())) {
-                ordemServico.get().getServicos().remove(itemServico);
-                servicoRepository.delete(itemServico); // deleta a relaçao do serviço com a ordem de serviço
-                break;
-            }
-        }
-        ordemServico.get().setValorTotalOrdem(ordemServico.get().totalOs()); // atualiza total da ordem de servico
-        OSRepository.save(ordemServico.get());
-        return new OrdemServicoDto(ordemServico.get(), ordemServico.get().getServicos(), ordemServico.get().getProdutos());
+    @Override
+    public Long countOrdemServico(){
+        return OSRepository.countOrdemServico();
     }
 
     //CONSULTAR SE O ID DO STATUS DA OrdemServico É IGUAL A ENCERRADO, CASO FOR NÃO DEIXA O USUARIO EDITAR A OrdemServico
